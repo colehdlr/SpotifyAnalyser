@@ -4,8 +4,7 @@ Spotify Analyzer is a webapp written in ReactJS and TypeScript. It is a tool to 
 ## Setting Up
 1. Clone the repo with ```gh repo clone https://github.com/colehdlr/SpotifyAnalyzer```
 2. After you clone the repo, remember to run this ```npm install --save-dev typescript ts-node @types/node```
-3. Run this from root ```cd frontend && npm install && cd ../backend && npm install``
-4. 
+3. Run this from root ```cd frontend && npm install && cd ../backend && npm install```
 
 API Keys are stored in plaintext in .env
 
