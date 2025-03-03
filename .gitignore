@@ -9,3 +9,33 @@ yarn-error.log*
 .pnp.js
 
 .vscode/*
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Logs
+logs
+*.log
+
+# Coverage directory
+coverage/
