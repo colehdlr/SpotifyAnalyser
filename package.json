@@ -1,0 +1,17 @@
+{
+  "name": "SpotifyAnalyser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "private": true
+}
