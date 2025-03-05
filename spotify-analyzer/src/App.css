@@ -91,3 +91,16 @@
 .Login p {
   color: white;
 }
+
+.LoadingScreen {
+  background-color: black;
+  height: calc(100vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.LoadingScreen h2 {
+  margin: 0px;
+  color: green;
+}
