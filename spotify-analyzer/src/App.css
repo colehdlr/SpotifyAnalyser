@@ -32,6 +32,10 @@
   text-decoration: none;
 }
 
+.Navbar a:hover {
+  outline: solid 2px green;
+}
+
 .Home {
   background-color: black;
   height: calc(100vh - 80px);
