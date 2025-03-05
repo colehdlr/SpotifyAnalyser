@@ -73,3 +73,17 @@
 .Settings p {
   color: white;
 }
+
+.Login {
+  background-color: black;
+  height: calc(100vh - 80px);
+}
+
+.Login h1 {
+  margin: 0px;
+  color: white;
+}
+
+.Login p {
+  color: white;
+}
