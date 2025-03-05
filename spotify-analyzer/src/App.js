@@ -10,6 +10,7 @@ import './App.css';
 
 import { apiService } from './services/api';
 
+import Page from './components/Page';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import Minigames from './components/Minigames';
@@ -24,10 +25,26 @@ function App() {
         <BrowserRouter>
             <Layout>
                 <Routes>
-                    <Route path="/" element={<Navigate to="/home" />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/minigames" element={<Minigames />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/" element={
+                        <Page 
+                            element={<Navigate to="/home" />} // Root: if auth -> home, else login
+                        />}/>
+                    <Route path="/login" element={
+                        <Page
+                            element={<Navigate to="/home" />} // Login: if auth -> home, else login
+                        />}/>
+                    <Route path="/home" element={
+                        <Page
+                            element={<Home />} // Home: if auth -> home, else login
+                        />}/>
+                    <Route path="/minigames" element={
+                        <Page
+                            element={<Minigames />} // Minigames: if auth -> minigames, else login
+                        />}/>
+                    <Route path="/settings" element={
+                        <Page
+                        element={<Settings />} // Settings: if auth -> settings, else login
+                    />}/>
                 </Routes>
             </Layout>
         </BrowserRouter>
