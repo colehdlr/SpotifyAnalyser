@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     BrowserRouter,
     Routes,
@@ -17,10 +17,28 @@ import Minigames from './components/Minigames';
 import Settings from './components/Settings';
 
 function App() {
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
-        apiService.checkStatus();
+        const checkApiStatus = async () => {
+            try {
+                await apiService.checkStatus();
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error checking API status:', error);
+            }
+        };
+
+        checkApiStatus();
     }, []);
 
+    if (isLoading) {
+        return (
+            <div className="LoadingScreen">
+                <h2>Loading...</h2>
+            </div>
+        );
+    }
     return (
         <BrowserRouter>
             <Layout>
