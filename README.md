@@ -10,7 +10,7 @@ Start by opening a terminal in your workspace.
 **[IMPORTANT: It is required to have Java version 21 and the latest NodeJS and Maven installed.]**
 
 1. Clone repo with ```gh repo clone https://github.com/colehdlr/SpotifyAnalyzer```
-2. Get dependecies for Spring Boot and React by running from root directory: ```cd spotify-analyzer && npm install && cd ../spotify-analyzer && npm install```.
+2. Get dependecies for Spring Boot and React by running from root directory: ```cd frontend && npm install && cd ../spotify-analyzer && npm install```.
 
 
 ### Running the environment
