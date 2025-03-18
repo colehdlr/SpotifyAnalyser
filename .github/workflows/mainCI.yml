@@ -19,7 +19,9 @@ jobs:
           node-version: '23'
 
       - name: Install dependencies
+        working-directory: spotify-analyzer
         run: npm install
 
       - name: Run tests
+        working-directory: spotify-analyzer
         run: npm test
