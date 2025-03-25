@@ -18,6 +18,9 @@ export const authService = {
 
 
 
-        return true; // TEMPORARY AUTOMATIC ACCESS
+        return false; // TEMPORARY AUTOMATIC ACCESS
+    },
+
+    login: async () => {
     }
 };
