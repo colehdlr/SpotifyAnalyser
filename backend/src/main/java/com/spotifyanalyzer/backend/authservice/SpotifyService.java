@@ -1,9 +1,9 @@
-package com.spotifyanalzer.backend.authservice;
+package com.spotifyanalyzer.backend.authservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spotifyanalzer.backend.config.SpotifyConfig;
-import com.spotifyanalzer.backend.dto.SpotifyAuthResponse;
-import com.spotifyanalzer.backend.exception.SpotifyAuthException;
+import com.spotifyanalyzer.backend.config.SpotifyConfig;
+import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
+import com.spotifyanalyzer.backend.exceptions.SpotifyAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,11 @@ public class SpotifyService {
 
     private final SpotifyConfig spotifyConfig;
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
 
     @Autowired
     public SpotifyService(SpotifyConfig spotifyConfig, RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.spotifyConfig = spotifyConfig;
         this.restTemplate = restTemplate;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -182,3 +180,4 @@ public class SpotifyService {
 
         return response.getBody();
     }
+}

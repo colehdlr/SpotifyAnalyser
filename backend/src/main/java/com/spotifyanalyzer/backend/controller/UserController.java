@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spotifyanalyzer.backend.model.User;
-import com.spotifyanalyzer.backend.service.UserService;
+import com.spotifyanalyzer.backend.authservice.UserService;
 
 @RestController
 @RequestMapping("/api")

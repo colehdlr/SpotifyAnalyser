@@ -1,7 +1,7 @@
 package com.spotifyanalyzer.backend.authservice;
 
 import com.spotifyanalyzer.backend.model.User;
-import com.spotifyanalyzer.backend.repository.UserRepository;
+import com.spotifyanalyzer.backend.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

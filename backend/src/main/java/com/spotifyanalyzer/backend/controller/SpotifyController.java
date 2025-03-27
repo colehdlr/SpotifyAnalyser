@@ -2,13 +2,17 @@ package com.spotifyanalyzer.backend.controller;
 
 import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
 import com.spotifyanalyzer.backend.dto.SpotifyCallbackRequest;
-import com.spotifyanalyzer.backend.service.SpotifyService;
+import com.spotifyanalyzer.backend.authservice.SpotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
+import com.spotifyanalyzer.backend.dto.SpotifyCallbackRequest;
+import com.spotifyanalyzer.backend.dto.SpotifyErrorResponse;
+
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController

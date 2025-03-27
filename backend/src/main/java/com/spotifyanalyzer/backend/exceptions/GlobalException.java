@@ -1,4 +1,4 @@
-package com.spotifyanalyzer.backend.exception;
+package com.spotifyanalyzer.backend.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalException {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
     @ExceptionHandler(SpotifyAuthException.class)
     public ResponseEntity<Map<String, Object>> handleSpotifyAuthException(SpotifyAuthException e) {
