@@ -12,8 +12,25 @@ const Home = () => {
                     credentials: 'include'
                 });
 
-                const result = await response.json();
-                setData(result);
+                // Log the raw response for debugging
+                const text = await response.text();
+                console.log('Raw response:', text);
+
+                // Check if response is empty
+                if (!text) {
+                    setError('Received empty response from server');
+                    setLoading(false);
+                    return;
+                }
+
+                // Try to parse JSON safely
+                try {
+                    const data = JSON.parse(text);
+                    setData(data);
+                } catch (jsonError) {
+                    setError(`Failed to parse JSON: ${jsonError.message}`);
+                    console.error('Invalid JSON:', text);
+                }
             } catch (err) {
                 setError(err.message);
             } finally {
