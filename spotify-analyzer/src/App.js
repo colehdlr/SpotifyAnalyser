@@ -10,6 +10,7 @@ import Layout from './components/Layout';
 import Home from './components/Home';
 import Minigames from './components/Minigames';
 import Settings from './components/Settings';
+import Artists from './components/Artists';
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +58,10 @@ function App() {
                     <Route path="/settings" element={
                         <Page
                         element={<Settings />} // Settings: if auth -> settings, else login
+                    />}/>
+                    <Route path="/artists" element={
+                        <Page
+                        element={<Artists />} // Settings: if auth -> artists, else login
                     />}/>
                 </Routes>
             </Layout>
