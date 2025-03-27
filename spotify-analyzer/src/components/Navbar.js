@@ -7,6 +7,7 @@ function Navbar() {
             <ul>
                 <li><Link to={"/home"}>Spotfiy Analyzer</Link></li>
                 <li><Link to={"/minigames"}>Minigames</Link></li>
+                <li><Link to={"/artists"}>Artists</Link></li>
                 <li><Link to={"/settings"}>Settings</Link></li>
             </ul>
         </div>
