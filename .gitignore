@@ -35,6 +35,7 @@ target/
 .project
 .settings
 .springBeans
+.env
 .sts4-cache
 
 ### IntelliJ IDEA ###
