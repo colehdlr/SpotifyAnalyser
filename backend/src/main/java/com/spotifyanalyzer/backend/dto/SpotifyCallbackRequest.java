@@ -1,9 +1,8 @@
 package com.spotifyanalyzer.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class SpotifyCallbackRequest {
     private String code;
+    private String state;
 
     public String getCode() {
         return code;
@@ -11,5 +10,13 @@ public class SpotifyCallbackRequest {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }
