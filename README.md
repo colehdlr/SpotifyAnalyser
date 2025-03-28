@@ -18,8 +18,9 @@ Start by opening a terminal in your workspace.
 It is recommended to use split terminal on preferred IDE to view terminal outputs for both Spring Boot and React.
 
 To run the project:
-1. Start the backend by running: ```cd backend && mvn spring-boot:run```.
-2. IN A DIFFERENT TERMINAL INSTANCE, start the frontend by running: ```cd spotify-analyzer && npm start```.
+1. Install Maven dependencies - ```mvn clean install```
+2. Start the backend by running: ```cd backend && mvn spring-boot:run```.
+3. IN A DIFFERENT TERMINAL INSTANCE, start the frontend by running: ```cd spotify-analyzer && npm start```.
 
 
 ### Developing
