@@ -2,105 +2,106 @@
   margin: 0px;
   padding: 0px;
   height: 100vh;
-}
+  background-color: white;
 
-.Navbar {
-  background-color: black;
-  height: 80px;
-  outline: solid 2px green;
-  padding: 0px 20px 0px 20px;
-  line-height: 80px;
-}
+  .Navbar {
+    background-color: #B2C8A3;
+    height: 80px;
+    outline: solid 2px green;
+    padding: 0px 20px 0px 20px;
+    line-height: 80px;
+  }
 
-.Navbar * {
-  margin: 0px;
-  padding: 0px;
-  user-select: none;
-}
+  .Navbar * {
+    margin: 0px;
+    padding: 0px;
+    user-select: none;
+  }
 
-.Navbar ul {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  list-style-type: none;
-}
+  .Navbar ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+  }
 
-.Navbar a {
-  color: green;
-  font-size: larger;
-  font-weight: bolder;
-  text-decoration: none;
-}
+  .Navbar a {
+    color: white;
+    font-size: larger;
+    font-weight: bolder;
+    text-decoration: none;
+  }
 
-.Navbar a:hover {
-  outline: solid 2px green;
-}
+  .Navbar a:hover {
+    outline: solid 2px white;
+  }
 
-.Home {
-  background-color: black;
-  height: calc(100vh - 80px);
-}
+  .Home {
+    background-color: white;
+    height: calc(100vh - 80px);
+  }
 
-.Home h1 {
-  margin: 0px;
-  color: white;
-}
+  .Home h1 {
+    margin: 0px;
+    color: #B2C8A3;
+  }
 
-.Home p {
-  color: white;
-}
+  .Home p {
+    color: #B2C8A3;
+  }
 
-.Minigames {
-  background-color: black;
-  height: calc(100vh - 80px);
-}
+  .Minigames {
+    background-color: white;
+    height: calc(100vh - 80px);
+  }
 
-.Minigames h1 {
-  margin: 0px;
-  color: white;
-}
+  .Minigames h1 {
+    margin: 0px;
+    color: #B2C8A3;
+  }
 
-.Minigames p {
-  color: white;
-}
+  .Minigames p {
+    color: #B2C8A3;
+  }
 
-.Settings {
-  background-color: black;
-  height: calc(100vh - 80px);
-}
+  .Settings {
+    background-color: white;
+    height: calc(100vh - 80px);
+  }
 
-.Settings h1 {
-  margin: 0px;
-  color: white;
-}
+  .Settings h1 {
+    margin: 0px;
+    color: #B2C8A3;
+  }
 
-.Settings p {
-  color: white;
-}
+  .Settings p {
+    color: #B2C8A3;
+  }
 
-.Login {
-  background-color: black;
-  height: calc(100vh - 80px);
-}
+  .Login {
+    background-color: white;
+    height: calc(100vh - 80px);
+  }
 
-.Login h1 {
-  margin: 0px;
-  color: white;
-}
+  .Login h1 {
+    margin: 0px;
+    color: #B2C8A3;
+  }
 
-.Login p {
-  color: white;
-}
+  .Login p {
+    color: #B2C8A3;
+  }
 
-.LoadingScreen {
-  background-color: black;
-  height: calc(100vh);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .LoadingScreen {
+    background-color: white;
+    height: calc(100vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.LoadingScreen h2 {
-  margin: 0px;
-  color: green;
+  .LoadingScreen h2 {
+    margin: 0px;
+    color: #B2C8A3;
+  }
 }
