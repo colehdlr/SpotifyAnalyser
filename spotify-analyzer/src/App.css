@@ -3,105 +3,150 @@
   padding: 0px;
   height: 100vh;
   background-color: white;
-
-  .Navbar {
-    background-color: #B2C8A3;
-    height: 80px;
-    outline: solid 2px green;
-    padding: 0px 20px 0px 20px;
-    line-height: 80px;
-  }
-
-  .Navbar * {
-    margin: 0px;
-    padding: 0px;
-    user-select: none;
-  }
-
-  .Navbar ul {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    list-style-type: none;
-  }
-
-  .Navbar a {
-    color: white;
-    font-size: larger;
-    font-weight: bolder;
-    text-decoration: none;
-  }
-
-  .Navbar a:hover {
-    outline: solid 2px white;
-  }
-
-  .Home {
-    background-color: white;
-    height: calc(100vh - 80px);
-  }
-
-  .Home h1 {
-    margin: 0px;
-    color: #B2C8A3;
-  }
-
-  .Home p {
-    color: #B2C8A3;
-  }
-
-  .Minigames {
-    background-color: white;
-    height: calc(100vh - 80px);
-  }
-
-  .Minigames h1 {
-    margin: 0px;
-    color: #B2C8A3;
-  }
-
-  .Minigames p {
-    color: #B2C8A3;
-  }
-
-  .Settings {
-    background-color: white;
-    height: calc(100vh - 80px);
-  }
-
-  .Settings h1 {
-    margin: 0px;
-    color: #B2C8A3;
-  }
-
-  .Settings p {
-    color: #B2C8A3;
-  }
-
-  .Login {
-    background-color: white;
-    height: calc(100vh - 80px);
-  }
-
-  .Login h1 {
-    margin: 0px;
-    color: #B2C8A3;
-  }
-
-  .Login p {
-    color: #B2C8A3;
-  }
-
-  .LoadingScreen {
-    background-color: white;
-    height: calc(100vh);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .LoadingScreen h2 {
-    margin: 0px;
-    color: #B2C8A3;
-  }
 }
+
+.Navbar {
+  background-color: #2e8b57;
+  height: 85px;
+  outline: solid 2px green;
+  padding: 0 30px;
+  line-height: 70px;
+  border-radius: 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
+  width: 60%;
+  margin: 40px auto
+}
+
+.Navbar * {
+  margin: 0px;
+  padding: 0px;
+  user-select: none;
+}
+
+.Navbar ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style-type: none;
+}
+
+.Navbar a {
+  color: white;
+  font-size: larger;
+  font-weight: bolder;
+  text-decoration: none;
+  padding: 8px 20px;
+  border-radius: 50px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.Navbar a:hover {
+  background-color: #2a6b3a ;
+  transform: scale(1.01) ;
+}
+
+.Home {
+  background-color: white;
+  height: calc(100vh - 80px);
+}
+
+.Home h1 {
+  margin: 0px;
+  color: #2e8b57;
+  text-align: center;
+}
+
+.Home p {
+  color: #2e8b57;
+}
+
+.Minigames {
+  background-color: white;
+  height: calc(100vh - 80px);
+}
+
+.Minigames h1 {
+  margin: 0px;
+  color: #2e8b57;
+}
+
+.Minigames p {
+  color: #2e8b57;
+}
+
+.Settings {
+  background-color: white;
+  height: calc(100vh - 80px);
+}
+
+.Settings h1 {
+  margin: 0px;
+  color: #2e8b57;
+}
+
+.Settings p {
+  color: #2e8b57;
+}
+
+.Login {
+  background-color: white;
+  height: calc(100vh - 80px);
+}
+
+.Login h1 {
+  margin: 0px;
+  color: #2e8b57;
+}
+
+.Login p {
+  color: #2e8b57;
+}
+
+.LoadingScreen {
+  background-color: white;
+  height: calc(100vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.LoadingScreen h2 {
+  margin: 0px;
+  color: #2e8b57;
+}
+
+.my-stats {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 20px;
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.my-stats-artists,
+.my-stats-busiest-hour,
+.my-stats-listening-graph{
+  background-color: #205d3b;
+  padding: 20px;
+  border-radius:10px ;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.my-stats-listening-graph{
+  grid-column: span 2;
+}
+
+.my-stats h3 {
+  margin-bottom: 10px;
+  color: whitesmoke;
+  font-size: 1.2em;
+}
+
+
