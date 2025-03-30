@@ -32,22 +32,22 @@ public class CORSConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        // Allow specified origins
+        // allow specified origins
         List<String> origins = Arrays.asList(allowedOrigins.split(","));
         corsConfiguration.setAllowedOrigins(origins);
 
-        // Allow specified methods
+        // allow specified methods
         List<String> methods = Arrays.asList(allowedMethods.split(","));
         corsConfiguration.setAllowedMethods(methods);
 
-        // Allow specified headers
+        // allow specified headers
         List<String> headers = Arrays.asList(allowedHeaders.split(","));
         corsConfiguration.setAllowedHeaders(headers);
 
-        // Allow credentials
+        // allow credentials
         corsConfiguration.setAllowCredentials(allowCredentials);
 
-        // Set max age
+        // set max age (for authentication)
         corsConfiguration.setMaxAge(maxAge);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -1,70 +1,85 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-
-import './App.css';
-
 import { apiService } from './services/api';
 
-import Page from './components/Page';
+import './App.css';
 import Layout from './components/Layout';
 import Home from './components/Home';
+import Login from './components/Login';
 import Minigames from './components/Minigames';
 import Settings from './components/Settings';
-import Artists from './components/Artists';
 
 function App() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [apiStatus, setApiStatus] = useState({
+        available: false,
+        loading: true
+    });
 
     useEffect(() => {
-        const checkApiStatus = async () => {
+        const checkApiAvailability = async () => {
             try {
                 await apiService.checkStatus();
-                setIsLoading(false);
+                setApiStatus({
+                    available: true,
+                    loading: false
+                });
             } catch (error) {
-                console.error('Error checking API status:', error);
+                console.error('API check failed:', error);
+                setApiStatus({
+                    available: false,
+                    loading: false
+                });
             }
         };
 
-        checkApiStatus();
+        checkApiAvailability();
     }, []);
 
-    if (isLoading) {
+    if (apiStatus.loading) {
         return (
             <div className="LoadingScreen">
                 <h2>Loading...</h2>
             </div>
         );
     }
+
+    if (!apiStatus.available) {
+        return (
+            <div className="LoadingScreen">
+                <h2>Connection Error</h2>
+                <p>Could not connect to the server. Please make sure the backend service is running at http://localhost:8080</p>
+            </div>
+        );
+    }
+
     return (
         <BrowserRouter>
-            <Layout>
-                <Routes>
-                    <Route path="/" element={
-                        <Page 
-                            element={<Navigate to="/home" />} // Root: if auth -> home, else login
-                        />}/>
-                    <Route path="/login" element={
-                        <Page
-                            element={<Navigate to="/home" />} // Login: if auth -> home, else login
-                        />}/>
-                    <Route path="/home" element={
-                        <Page
-                            element={<Home />} // Home: if auth -> home, else login
-                        />}/>
-                    <Route path="/minigames" element={
-                        <Page
-                            element={<Minigames />} // Minigames: if auth -> minigames, else login
-                        />}/>
-                    <Route path="/settings" element={
-                        <Page
-                        element={<Settings />} // Settings: if auth -> settings, else login
-                    />}/>
-                    <Route path="/artists" element={
-                        <Page
-                        element={<Artists />} // Settings: if auth -> artists, else login
-                    />}/>
-                </Routes>
-            </Layout>
+            <Routes>
+                <Route path="/" element={<Navigate to="/home" />} />
+
+                <Route path="/login" element={<Login />} />
+                <Route path="/callback" element={<Login />} />
+
+                <Route path="/home" element={
+                    <Layout>
+                        <Home />
+                    </Layout>
+                } />
+
+                <Route path="/minigames" element={
+                    <Layout>
+                        <Minigames />
+                    </Layout>
+                } />
+
+                <Route path="/settings" element={
+                    <Layout>
+                        <Settings />
+                    </Layout>
+                } />
+
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
         </BrowserRouter>
     );
 }

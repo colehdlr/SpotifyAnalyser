@@ -30,53 +30,73 @@ public class SpotifyService {
     /**
      * generate the authentication url for spotify
      */
-    public String getAuthorizationUrl() {
+    public String getAuthorisationUrl() {
         List<String> scopes = Arrays.asList(
                 "user-read-private",
                 "user-read-email",
                 "user-top-read"
-                // Add other scopes as needed
         );
 
         String state = generateRandomString(16);
-
         String scopeParam = String.join(" ", scopes);
 
-        return String.format(
+        //System.out.println("Client ID: " + spotifyConfig.getClientId());
+        //System.out.println("Redirect URI: " + spotifyConfig.getRedirectUri());
+
+        // set our redirect to the frontend callback (THIS MUST BE THE SAME AS WHATEVER IS IN SPOTIFY DASHBOARD!!!)
+        String redirectUri = "http://localhost:3000/callback";
+
+        String authUrl = String.format(
                 "https://accounts.spotify.com/authorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s",
                 spotifyConfig.getClientId(),
                 scopeParam,
-                spotifyConfig.getRedirectUri(),
+                redirectUri,
                 state
         );
+
+        //System.out.println("Generated Auth URL: " + authUrl);
+        return authUrl;
     }
 
-    /**
-     * exchange our apps authorisation code for the authentication and refresh token (see https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens)
-     */
     public SpotifyAuthResponse exchangeCodeForToken(String code) {
         HttpHeaders headers = createBasicAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        // IMPORTANT: MUST BE THE SAME REDIRECT AS IN getAuthorisationURL!!
+        String redirectUri = "http://localhost:3000/callback";
+
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("code", code);
-        body.add("redirect_uri", spotifyConfig.getRedirectUri());
+        body.add("redirect_uri", redirectUri);
+
+        //System.out.println("exchange code request - grant_type: authorization_code, redirect_uri: " + redirectUri);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<SpotifyAuthResponse> response = restTemplate.exchange(
-                "https://accounts.spotify.com/api/token",
-                HttpMethod.POST,
-                entity,
-                SpotifyAuthResponse.class
-        );
+        try {
+            ResponseEntity<SpotifyAuthResponse> response = restTemplate.exchange(
+                    "https://accounts.spotify.com/api/token",
+                    HttpMethod.POST,
+                    entity,
+                    SpotifyAuthResponse.class
+            );
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new SpotifyAuthException("Failed to exchange code for token");
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new SpotifyAuthException("error with the token exchange, status: " + response.getStatusCode());
+            }
+
+            SpotifyAuthResponse authResponse = response.getBody();
+            if (authResponse != null) {
+                System.out.println("token exchange successful. Token type: " + authResponse.getTokenType());
+                //System.out.println("expiry: " + authResponse.getExpiresIn() + " seconds");
+            }
+
+            return authResponse;
+        } catch (Exception e) {
+            System.err.println("error during token exchange: " + e.getMessage());
+            throw new SpotifyAuthException("token exchange failed: " + e.getMessage(), e);
         }
-
-        return response.getBody();
     }
 
     /**
@@ -100,7 +120,7 @@ public class SpotifyService {
         );
 
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new SpotifyAuthException("Failed to refresh access token");
+            throw new SpotifyAuthException("failed to refresh access token");
         }
 
         return response.getBody();
@@ -123,14 +143,14 @@ public class SpotifyService {
         );
 
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new SpotifyAuthException("Failed to fetch user profile");
+            throw new SpotifyAuthException("failed to fetch user profile");
         }
 
         return response.getBody();
     }
 
     /**
-     * create base64 (based64) http headers for the client credentials
+     * create base64 (based64) http headers for the client credentials (see spotify dev documentation link above)
      */
     private HttpHeaders createBasicAuthHeaders() {
         String credentials = spotifyConfig.getClientId() + ":" + spotifyConfig.getClientSecret();
@@ -138,7 +158,7 @@ public class SpotifyService {
                 .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + encodedCredentials);
+        headers.add("Authorization", "Basic " + encodedCredentials); // american spelling
         return headers;
     }
 
