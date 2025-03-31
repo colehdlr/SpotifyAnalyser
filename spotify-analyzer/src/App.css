@@ -1,14 +1,14 @@
 .App {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   height: 100vh;
   background-color: white;
 }
 
 .Navbar {
-  background-color: #2e8b57;
+  background-color: #4B6F44 ;
   height: 85px;
-  outline: solid 2px green;
+  outline: solid 2px #164716;
   padding: 0 30px;
   line-height: 70px;
   border-radius: 60px;
@@ -16,14 +16,14 @@
   justify-content: space-around;
   align-items: center;
   position: relative;
-  box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
   width: 60%;
   margin: 40px auto
 }
 
 .Navbar * {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   user-select: none;
 }
 
@@ -46,8 +46,8 @@
 }
 
 .Navbar a:hover {
-  background-color: #2a6b3a ;
-  transform: scale(1.01) ;
+  background-color: #223a1f;
+  transform: scale(1.1) ;
 }
 
 .Home {
@@ -56,13 +56,13 @@
 }
 
 .Home h1 {
-  margin: 0px;
-  color: #2e8b57;
+  margin: 0;
+  color: #4B6F44;
   text-align: center;
 }
 
 .Home p {
-  color: #2e8b57;
+  color: #4B6F44;
 }
 
 .Minigames {
@@ -71,12 +71,12 @@
 }
 
 .Minigames h1 {
-  margin: 0px;
-  color: #2e8b57;
+  margin: 0;
+  color: #4B6F44;
 }
 
 .Minigames p {
-  color: #2e8b57;
+  color: #4B6F44;
 }
 
 .Settings {
@@ -85,12 +85,12 @@
 }
 
 .Settings h1 {
-  margin: 0px;
-  color: #2e8b57;
+  margin: 0;
+  color: #4B6F44;
 }
 
 .Settings p {
-  color: #2e8b57;
+  color: #4B6F44;
 }
 
 .Login {
@@ -99,12 +99,12 @@
 }
 
 .Login h1 {
-  margin: 0px;
-  color: #2e8b57;
+  margin: 0;
+  color: #4B6F44;
 }
 
 .Login p {
-  color: #2e8b57;
+  color: #4B6F44;
 }
 
 .LoadingScreen {
@@ -116,10 +116,23 @@
 }
 
 .LoadingScreen h2 {
-  margin: 0px;
-  color: #2e8b57;
+  margin: 0;
+  color: #4B6F44;
 }
 
+.logout-button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #f80a0a;
+  transform: scale(1.2);
+}
 
 
 

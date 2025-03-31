@@ -33,7 +33,7 @@ const Home = () => {
         try {
             setLoading(true);
             // this calls our backend endpoint which then calls spotify's API
-            const data = await apiService.getTopArtists(timeRange, 10);
+            const data = await apiService.getTopArtists(timeRange, 5);
 
             setTopArtists(data);
             setError(null);
@@ -84,7 +84,6 @@ const Home = () => {
         <div className="home-container">
             <div className="header">
                 <h1>Overview of Your Listening Habits</h1>
-                <button onClick={handleLogout} className="logout-button">Logout</button>
             </div>
 
             {error && <div className="error-alert">{error}</div>}
@@ -102,8 +101,7 @@ const Home = () => {
                 <div className="my-stats-artists">
                     <h3>Your Top Artists</h3>
                     {topArtists && topArtists.items && topArtists.items.length > 0 ? (
-                        <div className="artists-grid">
-                            {topArtists.items.map((artist) => (
+                            topArtists.items.map((artist) => (
                                 <div key={artist.id} className="artist-card">
                                     {artist.images && artist.images.length > 0 ? (
                                         <img
@@ -121,8 +119,7 @@ const Home = () => {
                                         Popularity: {artist.popularity}/100
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            ))
                     ) : (
                         <div className="no-data">
                             <p>No artists found. You might need to listen to more music on Spotify.</p>
