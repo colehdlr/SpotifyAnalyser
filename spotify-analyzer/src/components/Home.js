@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
+import '../App.css';
 import '../Home.css';
 
 const Home = () => {
@@ -82,7 +83,7 @@ const Home = () => {
     return (
         <div className="home-container">
             <div className="header">
-                <h1>Your Spotify Top Artists</h1>
+                <h1>Overview of Your Listening Habits</h1>
                 <button onClick={handleLogout} className="logout-button">Logout</button>
             </div>
 
@@ -97,36 +98,50 @@ const Home = () => {
                 </select>
             </div>
 
-            {topArtists && topArtists.items && topArtists.items.length > 0 ? (
-                <div className="artists-grid">
-                    {topArtists.items.map((artist) => (
-                        <div key={artist.id} className="artist-card">
-                            {artist.images && artist.images.length > 0 ? (
-                                <img
-                                    src={artist.images[0].url}
-                                    alt={artist.name}
-                                    className="artist-image"
-                                />
-                            ) : (
-                                <div className="artist-image-placeholder">
-                                    No Image
+            <div className="my-stats">
+                <div className="my-stats-artists">
+                    <h3>Your Top Artists</h3>
+                    {topArtists && topArtists.items && topArtists.items.length > 0 ? (
+                        <div className="artists-grid">
+                            {topArtists.items.map((artist) => (
+                                <div key={artist.id} className="artist-card">
+                                    {artist.images && artist.images.length > 0 ? (
+                                        <img
+                                            src={artist.images[0].url}
+                                            alt={artist.name}
+                                            className="artist-image"
+                                        />
+                                    ) : (
+                                        <div className="artist-image-placeholder">
+                                            No Image
+                                        </div>
+                                    )}
+                                    <h3>{artist.name}</h3>
+                                    <div className="artist-popularity">
+                                        Popularity: {artist.popularity}/100
+                                    </div>
                                 </div>
-                            )}
-                            <h3>{artist.name}</h3>
-                            <div className="artist-genres">
-                                {artist.genres && artist.genres.slice(0, 3).join(', ')}
-                            </div>
-                            <div className="artist-popularity">
-                                Popularity: {artist.popularity}/100
-                            </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        <div className="no-data">
+                            <p>No artists found. You might need to listen to more music on Spotify.</p>
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <div className="no-data">
-                    <p>No artists found. You might need to listen to more music on Spotify.</p>
+                <div className="my-stats-busiest-hour">
+                     <h3>Your Busiest Listening Hour</h3>
                 </div>
-            )}
+                <div className="my-stats-listening-graph">
+                    <h3>Songs Streamed</h3>
+                </div>
+                <div className="my-stats-genres">
+                    <h3>Your Top Genres</h3>
+                </div>
+                <div className="my-stats-reccomendation">
+                    <h3>Your Reccomended Songs</h3>
+                </div>
+            </div>
         </div>
     );
 };

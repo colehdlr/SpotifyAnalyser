@@ -95,8 +95,8 @@
 
 .artists-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
     margin-bottom: 30px;
 }
 
@@ -115,13 +115,13 @@
 
 .artist-image {
     width: 100%;
-    height: 200px;
+    height: 150px;
     object-fit: cover;
 }
 
 .artist-image-placeholder {
     width: 100%;
-    height: 200px;
+    height: 150px;
     background-color: #e1e1e1;
     display: flex;
     justify-content: center;
@@ -131,13 +131,13 @@
 
 .artist-card h3 {
     margin: 10px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
 }
 
 .artist-genres, .artist-popularity {
     margin: 0 10px 10px;
-    font-size: 14px;
+    font-size: 12px;
     color: #666;
 }
 
@@ -162,4 +162,54 @@
     margin: 0;
     font-family: monospace;
     font-size: 12px;
+}
+
+.my-stats {
+    grid-template-columns: auto auto;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 30px auto;
+    background-color: #205d3b;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-stats-artists,
+.my-stats-busiest-hour,
+.my-stats-genres,
+.my-stats-listening-graph,
+.my-stats-reccomendation{
+    background-color: #A8D5BA ;
+    padding: 20px;
+    border-radius:10px ;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.my-stats-artists:hover,
+.my-stats-busiest-hour:hover,
+.my-stats-genres:hover,
+.my-stats-listening-graph:hover,
+.my-stats-reccomendation:hover{
+    transform: translateY(-20px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.my-stats-listening-graph,
+.my-stats-reccomendation{
+    grid-column: span 2;
+}
+
+.my-stats h3 {
+    margin-bottom: 10px;
+    color: whitesmoke;
+    font-size: 1.2em;
+}
+
+.home-container h1{
+    text-align: center;
+    color: #205d3b;
 }
