@@ -191,7 +191,35 @@ export const apiService = {
             console.error('Error fetching user profile:', error);
             throw error;
         }
-    }
+    },
+
+   getArtistInfo: async (artistID) => {
+           try {
+               const response = await fetch(
+                   `${BACKEND_URL}/spotify/data/artist-info?artist_id=${artistID}`,
+                   {
+                       credentials: 'include'
+                   }
+               );
+
+               if (!response.ok) {
+                   if (response.status === 401) {
+                       throw new Error("Authentication expired. Please login again.");
+                   }
+                   throw new Error(`Failed to fetch artist info: ${response.status}`);
+               }
+
+               return await response.json();
+           } catch (error) {
+               console.error('Error fetching artist info:', error);
+               throw error;
+           }
+       }
+
+
+
+
+
 };
 
 export default apiService;

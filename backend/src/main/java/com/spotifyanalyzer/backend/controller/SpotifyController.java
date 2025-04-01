@@ -197,6 +197,63 @@ public class SpotifyController {
         }
     }
 
+    @GetMapping("/data/artist-info")
+    public ResponseEntity<?> getArtistInfo(
+            @RequestParam(value = "artist_id") String artistID,
+            HttpSession session) {
+
+        String accessToken = (String) session.getAttribute("spotify_access_token");
+
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "not authenticated with Spotify"));
+        }
+
+        try {
+            // check if token is expired
+            Long expiryTime = (Long) session.getAttribute("spotify_token_expiry");
+            if (expiryTime != null && System.currentTimeMillis() > expiryTime) {
+                // token is expired so attempt a refresh
+                String refreshToken = (String) session.getAttribute("spotify_refresh_token");
+                if (refreshToken != null) {
+                    try {
+                        SpotifyAuthResponse refreshResponse = spotifyService.refreshAccessToken(refreshToken);
+                        session.setAttribute("spotify_access_token", refreshResponse.getAccessToken());
+
+                        // correct our expiry time
+                        long newExpiryTime = System.currentTimeMillis() + (refreshResponse.getExpiresIn() * 1000);
+                        session.setAttribute("spotify_token_expiry", newExpiryTime);
+
+                        accessToken = refreshResponse.getAccessToken();
+                        //System.out.println("Token refreshed successfully");
+                    } catch (Exception e) {
+                        // we can just assume they are logged out and make them log in
+                        //System.out.println("failed to refresh token: " + e.getMessage());
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .body(Map.of("error", "Authentication expired"));
+                    }
+                }
+            }
+
+            // making the actual request to the spotify API
+            Object artistInfo = spotifyService.makeSpotifyRequest(
+                    "/artists/" + artistID,
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Object.class);
+
+            
+
+
+            return ResponseEntity.ok(artistInfo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "failed to fetch top artists",
+                            "message", e.getMessage()));
+        }
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpSession session) {
         session.removeAttribute("spotify_access_token");

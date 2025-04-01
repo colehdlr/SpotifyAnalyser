@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Minigames from './components/Minigames';
 import Settings from './components/Settings';
+import Artists from './components/Artists';
 
 function App() {
     const [apiStatus, setApiStatus] = useState({
@@ -75,6 +76,13 @@ function App() {
                 <Route path="/settings" element={
                     <Layout>
                         <Settings />
+                    </Layout>
+                } />
+
+
+                <Route path="/artists" element={
+                    <Layout>
+                        <Artists />
                     </Layout>
                 } />
 
