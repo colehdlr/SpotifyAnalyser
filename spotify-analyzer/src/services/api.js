@@ -174,6 +174,31 @@ export const apiService = {
         }
     },
 
+    getRecommendations: async () => {
+        try {
+            const response = await fetch(
+                `${BACKEND_URL}/spotify/data/fake-recommendations`,
+                {
+                    credentials: 'include'
+                }
+            );
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error("Authentication expired. Please login again.");
+                }
+                throw new Error(`Failed to fetch recommendations workaround: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching recommendations workaround:', error);
+            throw error;
+        }
+    },
+
+
+
 
 
 

@@ -12,6 +12,7 @@ const Home = () => {
     const [timeRange, setTimeRange] = useState('medium_term');
     const navigate = useNavigate();
     const [recentTracks, setRecentTracks] = useState(null);
+    const [recommendations, setRecommendations] = useState([])
 
 
     const fetchRecentlyPlayed = async () => {
@@ -23,6 +24,15 @@ const Home = () => {
         }
     };
 
+    const fetchReccomendations = async () => {
+        try {
+            const data = await apiService.getRecommendations();
+            setRecommendations(data);
+        }catch (err) {
+            console.error("Error fetching reccommendations:", err);
+        }
+    }
+
 
     // check authentication (mounting on to Home component)
     useEffect(() => {
@@ -33,6 +43,7 @@ const Home = () => {
         }
         fetchTopArtists();
         fetchRecentlyPlayed();
+        fetchReccomendations();
     }, [accessToken, navigate]);
 
     // whenever the time period changes we need to refresh - this does that with timeRange as a param
@@ -40,6 +51,7 @@ const Home = () => {
         if (accessToken) {
             fetchTopArtists();
             fetchRecentlyPlayed();
+            fetchReccomendations();
         }
     }, [timeRange]);
 
@@ -146,7 +158,26 @@ const Home = () => {
                     )}
                 </div>
                 <div className="my-stats-reccomendation">
-                    <h3>Recommendations</h3>
+                    <h3>Recommendations Based on Your Recent Listen</h3>
+                    {recommendations && recommendations.length > 0 ? (
+                        <ul className="recent-tracks-list">
+                            {recommendations.slice(0, 10).map((track) => (
+                                <li key={track.id} className="recent-track">
+                                    <img
+                                        src={track.album.images[0]?.url}
+                                        alt={track.name}
+                                        className="recent-track-image"
+                                    />
+                                    <div className="recent-track-info">
+                                        <div className="track-name">{track.name}</div>
+                                        <div className="track-artist">{track.artists.map((a) => a.name).join(", ")}</div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No recommendations found.</p>
+                    )}
                 </div>
                 <div className="my-stats-genres">
                     <h3>Your Top Genres</h3>

@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -198,6 +202,70 @@ public class SpotifyController {
                             "message", e.getMessage()));
         }
     }
+
+    @GetMapping("/data/fake-recommendations")
+    public ResponseEntity<?> getFakeRecommendations(HttpSession session) {
+        String accessToken = (String) session.getAttribute("spotify_access_token");
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Not authenticated with Spotify"));
+        }
+
+        try {
+            // Spotify's recommendations endpoint is deprecated
+            //taking users most recent listen - searching it up and taking the suggestions from the search instead
+            Map<String, Object> recent = spotifyService.makeSpotifyRequest(
+                    "/me/player/recently-played?limit=1",
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Map.class
+            );
+
+            List<Map<String, Object>> items = (List<Map<String, Object>>) recent.get("items");
+            if (items == null || items.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "No recently played tracks found"));
+            }
+
+            Map<String, Object> track = (Map<String, Object>) items.get(0).get("track");
+            String trackName = (String) track.get("name");
+            Map<String, Object> artist = ((List<Map<String, Object>>) track.get("artists")).get(0);
+            String artistName = (String) artist.get("name");
+
+            // where i search using track name + artist
+            String query = URLEncoder.encode(trackName + " " + artistName, StandardCharsets.UTF_8);
+            String endpoint = "/search?q=" + query + "&type=track&limit=10";
+
+            Map<String, Object> searchResults = spotifyService.makeSpotifyRequest(
+                    endpoint,
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Map.class
+            );
+
+            // Removing the original track from the list
+            Map<String, Object> tracks = (Map<String, Object>) searchResults.get("tracks");
+            List<Map<String, Object>> allItems = (List<Map<String, Object>>) tracks.get("items");
+
+            //the below is used to remove any tracks with the same id OR the same name
+            String originalId = (String) track.get("id");
+            String originalName = ((String) track.get("name")).trim().toLowerCase();
+            List<Map<String, Object>> filtered = allItems.stream()
+                    .filter(t ->
+                            !originalId.equals(t.get("id"))&&
+                            !originalName.equals(((String) t.get("name")).trim().toLowerCase()))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(filtered);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to generate recommendations", "details", e.getMessage()));
+        }
+    }
+
 
 
     // end point for getting the tracks a user has JUST listened too
