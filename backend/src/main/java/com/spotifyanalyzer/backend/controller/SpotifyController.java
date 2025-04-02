@@ -199,44 +199,6 @@ public class SpotifyController {
         }
     }
 
-    @GetMapping("/data/recommendations")
-    public ResponseEntity<?> getRecommendations(HttpSession session) {
-        String accessToken = (String) session.getAttribute("spotify_access_token");
-        if (accessToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Not authenticated with Spotify"));
-        }
-
-        try {
-            // hardcoding my seed for now because it is not working
-            String seedTrackId = "5UWwZ5lm5PKu6eKsHAGxOk";
-            System.out.println("Using hardcoded seedTrackId: " + seedTrackId);
-
-            // to call reccommendations
-            String recEndpoint = "/recommendations?seed_tracks=" + seedTrackId + "&limit=10";
-
-            Map<String, Object> recommendations = spotifyService.makeSpotifyRequest(
-                    recEndpoint,
-                    HttpMethod.GET,
-                    accessToken,
-                    null,
-                    Map.class
-            );
-            System.out.println("Seed track ID: " + seedTrackId);
-            System.out.println("Built endpoint: " + recEndpoint);
-
-
-
-            return ResponseEntity.ok(recommendations);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to get recommendations", "details", e.getMessage()));
-        }
-    }
-
-
 
     // end point for getting the tracks a user has JUST listened too
     @GetMapping("/data/recently-played")
