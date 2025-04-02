@@ -151,7 +151,34 @@ export const apiService = {
         }
     },
 
-    getTopTracks: async (timeRange = 'medium_term', limit = 10) => {
+    getRecentlyPlayed: async (limit = 10) => {
+        try {
+            const response = await fetch(
+                `${BACKEND_URL}/spotify/data/recently-played?limit=${limit}`,
+                {
+                    credentials: 'include'
+                }
+            );
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error("Authentication expired. Please login again.");
+                }
+                throw new Error(`Failed to fetch recently played tracks: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching recently played tracks:', error);
+            throw error;
+        }
+    },
+
+
+
+
+
+    getTopTracks: async (timeRange = 'medium_term', limit = 15) => {
         try {
             const response = await fetch(
                 `${BACKEND_URL}/spotify/data/top-tracks?time_range=${timeRange}&limit=${limit}`,
