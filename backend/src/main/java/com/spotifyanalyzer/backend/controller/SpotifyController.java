@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/spotify")
@@ -196,6 +198,90 @@ public class SpotifyController {
                             "message", e.getMessage()));
         }
     }
+
+    @GetMapping("/data/recommendations")
+    public ResponseEntity<?> getRecommendations(HttpSession session) {
+        String accessToken = (String) session.getAttribute("spotify_access_token");
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Not authenticated with Spotify"));
+        }
+
+        try {
+            // hardcoding my seed for now because it is not working
+            String seedTrackId = "5UWwZ5lm5PKu6eKsHAGxOk";
+            System.out.println("Using hardcoded seedTrackId: " + seedTrackId);
+
+            // to call reccommendations
+            String recEndpoint = "/recommendations?seed_tracks=" + seedTrackId + "&limit=10";
+
+            Map<String, Object> recommendations = spotifyService.makeSpotifyRequest(
+                    recEndpoint,
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Map.class
+            );
+            System.out.println("Seed track ID: " + seedTrackId);
+            System.out.println("Built endpoint: " + recEndpoint);
+
+
+
+            return ResponseEntity.ok(recommendations);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to get recommendations", "details", e.getMessage()));
+        }
+    }
+
+
+
+    // end point for getting the tracks a user has JUST listened too
+    @GetMapping("/data/recently-played")
+    public ResponseEntity<?> getRecentlyPlayed(
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            HttpSession session) {
+
+        String accessToken = (String) session.getAttribute("spotify_access_token");
+
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Not authenticated with Spotify"));
+        }
+
+        try {
+            Long expiryTime = (Long) session.getAttribute("spotify_token_expiry");
+            if (expiryTime != null && System.currentTimeMillis() > expiryTime) {
+                String refreshToken = (String) session.getAttribute("spotify_refresh_token");
+                if (refreshToken != null) {
+                    SpotifyAuthResponse refreshResponse = spotifyService.refreshAccessToken(refreshToken);
+                    session.setAttribute("spotify_access_token", refreshResponse.getAccessToken());
+                    session.setAttribute("spotify_token_expiry", System.currentTimeMillis() + (refreshResponse.getExpiresIn() * 1000));
+                    accessToken = refreshResponse.getAccessToken();
+                }
+            }
+
+            // call Spotify API for recently played - I can change limit to change the numebr displayed
+            Object recentlyPlayed = spotifyService.makeSpotifyRequest(
+                    "/me/player/recently-played?limit=" + limit,
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Object.class);
+
+            return ResponseEntity.ok(recentlyPlayed);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch recently played tracks",
+                            "message", e.getMessage()));
+        }
+    }
+
+
+
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpSession session) {
