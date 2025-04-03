@@ -191,6 +191,29 @@ export const apiService = {
             console.error('Error fetching user profile:', error);
             throw error;
         }
+    },
+
+    searchArtists: async (searchTerm) => {
+        try {
+            const response = await fetch(
+                `${BACKEND_URL}/spotify/data/search?q=${searchTerm}&limit=3&type=artist`,
+                {
+                    credentials: 'include'
+                }
+            );
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error("Authentication expired. Please login again.");
+                }
+                throw new Error(`Failed to fetch top tracks: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching top tracks:', error);
+            throw error;
+        }
     }
 };
 
