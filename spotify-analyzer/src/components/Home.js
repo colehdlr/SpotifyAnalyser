@@ -11,6 +11,28 @@ const Home = () => {
     const [error, setError] = useState(null);
     const [timeRange, setTimeRange] = useState('medium_term');
     const navigate = useNavigate();
+    const [recentTracks, setRecentTracks] = useState(null);
+    const [recommendations, setRecommendations] = useState([])
+
+
+    const fetchRecentlyPlayed = async () => {
+        try {
+            const data = await apiService.getRecentlyPlayed(15);
+            setRecentTracks(data);
+        } catch (err) {
+            console.error("Error fetching recently played:", err);
+        }
+    };
+
+    const fetchReccomendations = async () => {
+        try {
+            const data = await apiService.getRecommendations();
+            setRecommendations(data);
+        }catch (err) {
+            console.error("Error fetching reccommendations:", err);
+        }
+    }
+
 
     // check authentication (mounting on to Home component)
     useEffect(() => {
@@ -20,12 +42,16 @@ const Home = () => {
             return;
         }
         fetchTopArtists();
+        fetchRecentlyPlayed();
+        fetchReccomendations();
     }, [accessToken, navigate]);
 
     // whenever the time period changes we need to refresh - this does that with timeRange as a param
     useEffect(() => {
         if (accessToken) {
             fetchTopArtists();
+            fetchRecentlyPlayed();
+            fetchReccomendations();
         }
     }, [timeRange]);
 
@@ -33,7 +59,7 @@ const Home = () => {
         try {
             setLoading(true);
             // this calls our backend endpoint which then calls spotify's API
-            const data = await apiService.getTopArtists(timeRange, 10);
+            const data = await apiService.getTopArtists(timeRange, 4);
 
             setTopArtists(data);
             setError(null);
@@ -55,22 +81,6 @@ const Home = () => {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            // call the backend logout endpoint to clear server-side session
-            await apiService.logoutFromSpotify();
-
-            // clear client-side session storage
-            sessionStorage.removeItem('spotify_access_token');
-            setAccessToken(null);
-            navigate('/login');
-        } catch (err) {
-            console.error("logout error:", err);
-            // even if they still are logged in in the backend then we can just clear their token from local storage
-            sessionStorage.removeItem('spotify_access_token');
-            navigate('/login');
-        }
-    };
 
     const handleTimeRangeChange = (e) => {
         setTimeRange(e.target.value);
@@ -80,11 +90,13 @@ const Home = () => {
         return <div className="loading-container">Loading your Spotify data...</div>;
     }
 
+
+
+
     return (
         <div className="home-container">
             <div className="header">
                 <h1>Overview of Your Listening Habits</h1>
-                <button onClick={handleLogout} className="logout-button">Logout</button>
             </div>
 
             {error && <div className="error-alert">{error}</div>}
@@ -101,22 +113,20 @@ const Home = () => {
             <div className="my-stats">
                 <div className="my-stats-artists">
                     <h3>Your Top Artists</h3>
-                    {topArtists && topArtists.items && topArtists.items.length > 0 ? (
-                        <div className="artists-grid">
+                    {topArtists?.items?.length > 0 ? (
+                        <div className="artist-grid">
                             {topArtists.items.map((artist) => (
                                 <div key={artist.id} className="artist-card">
-                                    {artist.images && artist.images.length > 0 ? (
+                                    {artist.images?.[0] ? (
                                         <img
                                             src={artist.images[0].url}
                                             alt={artist.name}
                                             className="artist-image"
                                         />
                                     ) : (
-                                        <div className="artist-image-placeholder">
-                                            No Image
-                                        </div>
+                                        <div className="artist-image-placeholder">No Image</div>
                                     )}
-                                    <h3>{artist.name}</h3>
+                                    <h4 className="artist-name">{artist.name}</h4>
                                     <div className="artist-popularity">
                                         Popularity: {artist.popularity}/100
                                     </div>
@@ -129,19 +139,54 @@ const Home = () => {
                         </div>
                     )}
                 </div>
-                <div className="my-stats-busiest-hour">
-                     <h3>Your Busiest Listening Hour</h3>
+                <div className="my-stats-recently-played">
+                    <h3>Your Recently Played Tracks</h3>
+                    {recentTracks && recentTracks.items ? (
+                        <ul className="recent-tracks-list">
+                            {recentTracks.items.slice(0, 10).map((item) => (
+                                <li key={item.played_at} className="recent-track">
+                                    <img src={item.track.album.images[0]?.url} alt={item.track.name} className="recent-track-image" />
+                                    <div className="recent-track-info">
+                                        <div className="track-name">{item.track.name}</div>
+                                        <div className="track-artist">{item.track.artists.map((a) => a.name).join(", ")}</div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No recent tracks found.</p>
+                    )}
                 </div>
-                <div className="my-stats-listening-graph">
-                    <h3>Songs Streamed</h3>
+                <div className="my-stats-reccomendation">
+                    <h3>Recommendations Based on Your Recent Listen</h3>
+                    {recommendations && recommendations.length > 0 ? (
+                        <ul className="recent-tracks-list">
+                            {recommendations.slice(0, 10).map((track) => (
+                                <li key={track.id} className="recent-track">
+                                    <img
+                                        src={track.album.images[0]?.url}
+                                        alt={track.name}
+                                        className="recent-track-image"
+                                    />
+                                    <div className="recent-track-info">
+                                        <div className="track-name">{track.name}</div>
+                                        <div className="track-artist">{track.artists.map((a) => a.name).join(", ")}</div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No recommendations found.</p>
+                    )}
                 </div>
                 <div className="my-stats-genres">
                     <h3>Your Top Genres</h3>
                 </div>
-                <div className="my-stats-reccomendation">
-                    <h3>Your Reccomended Songs</h3>
+                <div className="my-stats-listening-graph">
+                    <h3>[not chosen yet]</h3>
                 </div>
             </div>
+
         </div>
     );
 };

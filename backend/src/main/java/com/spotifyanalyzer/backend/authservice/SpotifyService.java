@@ -34,7 +34,8 @@ public class SpotifyService {
         List<String> scopes = Arrays.asList(
                 "user-read-private",
                 "user-read-email",
-                "user-top-read"
+                "user-top-read",
+                "user-read-recently-played"
         );
 
         String state = generateRandomString(16);

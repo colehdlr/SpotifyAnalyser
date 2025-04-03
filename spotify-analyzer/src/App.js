@@ -5,6 +5,7 @@ import { apiService } from './services/api';
 import './App.css';
 import Layout from './components/Layout';
 import Home from './components/Home';
+import Artists from "./components/Artists";
 import Login from './components/Login';
 import Minigames from './components/Minigames';
 import Settings from './components/Settings';
@@ -69,6 +70,12 @@ function App() {
                 <Route path="/minigames" element={
                     <Layout>
                         <Minigames />
+                    </Layout>
+                } />
+
+                <Route path="/artists" element={
+                    <Layout>
+                        <Artists />
                     </Layout>
                 } />
 
