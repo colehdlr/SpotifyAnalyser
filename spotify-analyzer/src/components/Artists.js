@@ -11,7 +11,10 @@ function Artists() {
     const [error, setError] = useState(null);
     const [timeRange, setTimeRange] = useState('medium_term');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
     const [artistInfo, setArtistInfo] = useState(null);
+    const [artistSummary, setArtistSummary] = useState(null);
+    const [summaryLoading, setSummaryLoading] = useState(false);
     const navigate = useNavigate();
     let artistID;
 
@@ -38,8 +41,23 @@ function Artists() {
 
         const data = await apiService.getArtistInfo(artistID);
         setArtistInfo(data);
-
         setIsModalOpen(true);
+    };
+
+    const getArtistSummary = async () => {
+        try {
+            setSummaryLoading(true);
+            if (artistInfo) {
+                // Uncomment and use the actual API call when ready
+                const summary = await apiService.getArtistSummary(artistInfo.id, artistInfo.name);
+                setArtistSummary(summary["artist_summary"]);
+                setIsSummaryModalOpen(true);
+            }
+        } catch (err) {
+            setError("Failed to load artist summary");
+        } finally {
+            setSummaryLoading(false);
+        }
     };
 
     const fetchTopArtists = async () => {
@@ -81,6 +99,11 @@ function Artists() {
     const closeModal = () => {
         setIsModalOpen(false);
         setArtistInfo(null);
+    };
+
+    const closeSummaryModal = () => {
+        setIsSummaryModalOpen(false);
+        setArtistSummary(null);
     };
 
     if (loading) {
@@ -162,11 +185,40 @@ function Artists() {
                                     <p>Name: {artistInfo.name}</p>
                                     <p>Followers: {artistInfo.followers.total}</p>
                                     <p>Popularity: {artistInfo.popularity}</p>
+                                    <button
+                                        onClick={getArtistSummary}
+                                        className="summary-button"
+                                        disabled={summaryLoading}
+                                    >
+                                        {summaryLoading ? "Loading..." : "Artist Summary"}
+                                    </button>
                                 </div>
                                 <img src={artistInfo.images[0].url} alt={artistInfo.name} />
                             </>
                         ) : (
                             <p>Loading...</p>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {isSummaryModalOpen && (
+                <div className="modal summary-modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={closeSummaryModal}>&times;</span>
+                        {artistSummary ? (
+                            <div className="summary-content">
+                                <h2>{artistInfo.name} Summary</h2>
+                                <div className="artist-summary">
+                                    <p>{artistSummary.artist_summary || artistSummary}</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="loading-overlay">
+                                <h3>Loading artist summary</h3>
+                                <div className="spinner"></div>
+                                <p>This may take a moment...</p>
+                            </div>
                         )}
                     </div>
                 </div>

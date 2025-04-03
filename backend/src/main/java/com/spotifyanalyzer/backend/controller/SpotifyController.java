@@ -1,5 +1,8 @@
 package com.spotifyanalyzer.backend.controller;
 
+import com.spotifyanalyzer.backend.authservice.ArtistDetails;
+import com.spotifyanalyzer.backend.authservice.JsonUtil;
+import com.spotifyanalyzer.backend.authservice.PythonService;
 import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
 import com.spotifyanalyzer.backend.authservice.SpotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +20,12 @@ import java.util.Map;
 public class SpotifyController {
 
     private final SpotifyService spotifyService;
+    private final PythonService pythonService;
 
     @Autowired
     public SpotifyController(SpotifyService spotifyService) {
         this.spotifyService = spotifyService;
+        this.pythonService = new PythonService();
     }
 
     @GetMapping("/login")
@@ -201,7 +206,7 @@ public class SpotifyController {
     public ResponseEntity<?> getArtistInfo(
             @RequestParam(value = "artist_id") String artistID,
             HttpSession session) {
-
+        System.out.println("Getting artist info for: " + artistID);
         String accessToken = (String) session.getAttribute("spotify_access_token");
 
         if (accessToken == null) {
@@ -243,15 +248,40 @@ public class SpotifyController {
                     null,
                     Object.class);
 
-            
-
-
             return ResponseEntity.ok(artistInfo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "failed to fetch top artists",
                             "message", e.getMessage()));
         }
+    }
+
+    @GetMapping("/data/artist-summary")
+    public ResponseEntity<?> getArtistSummary(
+            @RequestParam(value = "artistID") String artistID,
+            @RequestParam(value = "artistName") String artistName){
+
+        System.out.println("Getting artist summary for: " + artistName);
+
+        try {
+            ArtistDetails artistDetails = new ArtistDetails();
+            artistDetails.setArtistID(artistID);
+            artistDetails.setArtistName(artistName);
+
+            String artistDetailJSON = JsonUtil.convertObjectToJson(artistDetails);
+            System.out.println("Sending artist summary request to python service" + artistDetailJSON);
+
+            String artistSummary = pythonService.sendPOST(artistDetailJSON);
+            System.out.println(artistSummary);
+            return ResponseEntity.ok(artistSummary);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "failed to fetch artist summary",
+                            "message", e.getMessage()));
+        }
+
+
+
     }
 
     @PostMapping("/logout")
