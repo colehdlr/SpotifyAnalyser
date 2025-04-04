@@ -1,0 +1,13 @@
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\authservice\SpotifyService.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\BackendApplication.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\config\CORSConfig.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\config\SpotifyConfig.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\config\WebConfig.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\config\WebSecurityConfig.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\controller\SpotifyController.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\controller\StatusController.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\dto\SpotifyAuthResponse.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\dto\SpotifyCallbackRequest.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\dto\SpotifyErrorResponse.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\exceptions\GlobalException.java
+C:\Users\sandh\IdeaProjects\SpotifyAnalyser\backend\src\main\java\com\spotifyanalyzer\backend\exceptions\SpotifyAuthException.java
