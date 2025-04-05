@@ -187,15 +187,36 @@ export const apiService = {
                 if (response.status === 401) {
                     throw new Error("Authentication expired. Please login again.");
                 }
-                throw new Error(`Failed to fetch recommendations workaround: ${response.status}`);
+                throw new Error(`Failed to fetch your recommendations: ${response.status}`);
             }
 
             return await response.json();
         } catch (error) {
-            console.error('Error fetching recommendations workaround:', error);
+            console.error('Error fetching your recommendations:', error);
             throw error;
         }
     },
+
+    getTopGenre: async () => {
+        try {
+            const response = await fetch(`${BACKEND_URL}/spotify/data/top-genre`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch top genre: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.topGenre;
+        } catch (error) {
+            console.error('Error fetching top genre:', error);
+            throw error;
+        }
+    },
+
+
+
 
 
 
