@@ -38,6 +38,7 @@ function Artists() {
             const data = await apiService.getArtistInfo(artist.id);
             setArtistInfo(data);
             setIsModalOpen(true);
+            setClosedArtistInfo(false);
         }
     };
 
@@ -129,7 +130,7 @@ function Artists() {
                 <div className="artist-page-my-stats-artists">
                     <h3>Your Top Artists</h3>
                     {topArtists && topArtists.items && topArtists.items.length > 0 ? (
-                        <div className="artist-page-artists-grid">
+                        <div className="artist-page-artist-grid">
                             {topArtists.items.map((artist) => (
                                 <div key={artist.id} className="artist-page-artist-card">
                                     {artist.images && artist.images.length > 0 ? (
@@ -157,12 +158,26 @@ function Artists() {
                         </div>
                     )}
                 </div>
+                <div className="artist-page-my-stats-artists">
+                    <h3>Search for an Artist</h3>
+                    <input
+                        type="text"
+                        placeholder="Enter artist name"
+                        className="artist-page-search-input"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                getArtistInfo(e.target.value);
+                            }
+                        }}
+                    />
+                    <button onClick={() => getArtistInfo(document.querySelector('input').value)} className="artist-page-green-button">Search</button>
+                    </div>
             </div>
 
             {isModalOpen && (
                 <div className="artist-page-modal">
                     <div className="artist-page-modal-content">
-                        <span className="close" onClick={closeModal}>&times;</span>
+                        <span className="artist-page-close" onClick={closeModal}>&times;</span>
                         {artistInfo && (
                             <>
                                 <div className="artist-page-text-content">
