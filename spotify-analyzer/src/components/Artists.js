@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
-import '../App.css';
+//import '../App.css';
 import '../Artists.css';
-import '../Home.css';
 
 function Artists() {
     const [accessToken, setAccessToken] = useState(sessionStorage.getItem('spotify_access_token'));

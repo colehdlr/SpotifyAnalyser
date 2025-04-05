@@ -73,6 +73,12 @@ function App() {
                     </Layout>
                 } />
 
+                <Route path="/artists" element={
+                    <Layout>
+                        <Artists />
+                    </Layout>
+                } />
+
                 <Route path="/settings" element={
                     <Layout>
                         <Settings />
