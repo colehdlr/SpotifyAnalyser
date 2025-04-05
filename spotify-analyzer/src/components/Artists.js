@@ -15,8 +15,8 @@ function Artists() {
     const [artistInfo, setArtistInfo] = useState(null);
     const [artistSummary, setArtistSummary] = useState(null);
     const [summaryLoading, setSummaryLoading] = useState(false);
+    const [closedArtistInfo, setClosedArtistInfo] = useState(false);
     const navigate = useNavigate();
-    let artistID;
 
     useEffect(() => {
         if (!accessToken) {
@@ -33,25 +33,21 @@ function Artists() {
     }, [timeRange]);
 
     const getArtistInfo = async (artistName) => {
-        for (let i = 0; i < topArtists.items.length; i++) {
-            if (topArtists.items[i].name === artistName) {
-                artistID = topArtists.items[i].id;
-            }
+        const artist = topArtists.items.find(artist => artist.name === artistName);
+        if (artist) {
+            const data = await apiService.getArtistInfo(artist.id);
+            setArtistInfo(data);
+            setIsModalOpen(true);
         }
-
-        const data = await apiService.getArtistInfo(artistID);
-        setArtistInfo(data);
-        setIsModalOpen(true);
     };
 
     const getArtistSummary = async () => {
         try {
-            setSummaryLoading(true);
             if (artistInfo) {
-                // Uncomment and use the actual API call when ready
-                const summary = await apiService.getArtistSummary(artistInfo.id, artistInfo.name);
-                setArtistSummary(summary["artist_summary"]);
-                setIsSummaryModalOpen(true);
+                    setSummaryLoading(true);
+                    const summary = await apiService.getArtistSummary(artistInfo.id, artistInfo.name);
+                    setArtistSummary(summary["artist_summary"]);
+                    setIsSummaryModalOpen(true);
             }
         } catch (err) {
             setError("Failed to load artist summary");
@@ -63,7 +59,7 @@ function Artists() {
     const fetchTopArtists = async () => {
         try {
             setLoading(true);
-            const data = await apiService.getTopArtists(timeRange, 10);
+            const data = await apiService.getTopArtists(timeRange, 14);
             setTopArtists(data);
             setError(null);
         } catch (err) {
@@ -74,7 +70,7 @@ function Artists() {
                 navigate('/login');
                 return;
             }
-            setError("could not load artist data, maybe our server or spotify is down");
+            setError("Could not load artist data, maybe our server or Spotify is down");
         } finally {
             setLoading(false);
         }
@@ -98,12 +94,13 @@ function Artists() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setArtistInfo(null);
+        setIsSummaryModalOpen(false);
+        setSummaryLoading(false);
+        setClosedArtistInfo(true);
     };
 
     const closeSummaryModal = () => {
         setIsSummaryModalOpen(false);
-        setArtistSummary(null);
     };
 
     if (loading) {
@@ -113,7 +110,7 @@ function Artists() {
     return (
         <div className="home-container">
             <div className="header">
-                <h1>Overview of Your Listening Habits</h1>
+                <h1>Overview of Your Favourite Artists</h1>
                 <button onClick={handleLogout} className="logout-button">Logout</button>
             </div>
 
@@ -170,7 +167,7 @@ function Artists() {
                     <h3>Your Top Genres</h3>
                 </div>
                 <div className="my-stats-reccomendation">
-                    <h3>Your Reccomended Songs</h3>
+                    <h3>Your Recommended Songs</h3>
                 </div>
             </div>
 
@@ -178,7 +175,7 @@ function Artists() {
                 <div className="modal">
                     <div className="modal-content">
                         <span className="close" onClick={closeModal}>&times;</span>
-                        {artistInfo ? (
+                        {artistInfo && (
                             <>
                                 <div className="text-content">
                                     <h2>Artist Info</h2>
@@ -190,36 +187,35 @@ function Artists() {
                                         className="summary-button"
                                         disabled={summaryLoading}
                                     >
-                                        {summaryLoading ? "Loading..." : "Artist Summary"}
+                                        {summaryLoading ? (
+                                            <>
+                                                <span className="button-spinner"></span>
+                                                Generating Summary - this might take a while..
+                                            </>
+                                        ) : (
+                                            "Artist Summary"
+                                        )}
                                     </button>
                                 </div>
-                                <img src={artistInfo.images[0].url} alt={artistInfo.name} />
+                                {artistInfo.images && artistInfo.images.length > 0 && (
+                                    <img src={artistInfo.images[0].url} alt={artistInfo.name} />
+                                )}
                             </>
-                        ) : (
-                            <p>Loading...</p>
                         )}
                     </div>
                 </div>
             )}
 
-            {isSummaryModalOpen && (
+            {isSummaryModalOpen && !closedArtistInfo && (
                 <div className="modal summary-modal">
                     <div className="modal-content">
                         <span className="close" onClick={closeSummaryModal}>&times;</span>
-                        {artistSummary ? (
-                            <div className="summary-content">
-                                <h2>{artistInfo.name} Summary</h2>
-                                <div className="artist-summary">
-                                    <p>{artistSummary.artist_summary || artistSummary}</p>
-                                </div>
+                        <div className="summary-content">
+                            <h2>{artistInfo.name} Summary</h2>
+                            <div className="artist-summary">
+                                <p>{artistSummary}</p>
                             </div>
-                        ) : (
-                            <div className="loading-overlay">
-                                <h3>Loading artist summary</h3>
-                                <div className="spinner"></div>
-                                <p>This may take a moment...</p>
-                            </div>
-                        )}
+                        </div>
                     </div>
                 </div>
             )}
