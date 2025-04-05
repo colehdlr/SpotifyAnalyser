@@ -12,6 +12,35 @@
     background-color: rgba(0, 0, 0, 0.7);
 }
 
+.artist-page-artist-card h3 {
+    color: black;
+}
+.artist-page-green-button {
+    background-color: #006400;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.artist-page-green-button:hover {
+    background-color: #004d00;
+}
+.artist-page-my-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1600px;
+    margin: 30px auto;
+    background-color: #4B6F44;
+    border-radius: 10px;
+}
+
 .modal-content {
     background-color: #fff;
     margin: auto;
@@ -163,3 +192,125 @@
   align-items: center;
   text-align: center;
 }
+
+
+.error-message, .error-alert {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff4d4d;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.artist-page-home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.artist-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.artist-page-time-range-selector {
+    margin-bottom: 20px;
+}
+
+.artist-page-time-range-selector select {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.artist-page-artist-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 10px;
+}
+
+.artist-page-artist-card {
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    max-width: 220px;
+}
+
+.artist-page-artist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.artist-page-artist-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.artist-page-artist-image-placeholder {
+    width: 100%;
+    height: 70px;
+    background-color: #e1e1e1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+}
+
+
+
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.raw-data {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+.raw-data pre {
+    margin: 0;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+
+.artist-page-my-stats-artists{
+    background-color: #B8E0D2 ;
+    padding: 20px;
+    border-radius:10px ;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-container h1{
+    text-align: center;
+    color: #4B6F44 ;
+}
+

@@ -108,7 +108,7 @@ function Artists() {
     }
 
     return (
-        <div className="home-container">
+        <div className="artist-page-home-container">
             <div className="header">
                 <h1>Overview of Your Favourite Artists</h1>
                 <button onClick={handleLogout} className="logout-button">Logout</button>
@@ -116,7 +116,7 @@ function Artists() {
 
             {error && <div className="error-alert">{error}</div>}
 
-            <div className="time-range-selector">
+            <div className="artist-page-time-range-selector">
                 <label>Time Range:</label>
                 <select value={timeRange} onChange={handleTimeRangeChange}>
                     <option value="short_term">Last 4 Weeks</option>
@@ -125,29 +125,29 @@ function Artists() {
                 </select>
             </div>
 
-            <div className="my-stats">
-                <div className="my-stats-artists">
+            <div className="artist-page-my-stats">
+                <div className="artist-page-my-stats-artists">
                     <h3>Your Top Artists</h3>
                     {topArtists && topArtists.items && topArtists.items.length > 0 ? (
-                        <div className="artists-grid">
+                        <div className="artist-page-artists-grid">
                             {topArtists.items.map((artist) => (
-                                <div key={artist.id} className="artist-card">
+                                <div key={artist.id} className="artist-page-artist-card">
                                     {artist.images && artist.images.length > 0 ? (
                                         <img
                                             src={artist.images[0].url}
                                             alt={artist.name}
-                                            className="artist-image"
+                                            className="artist-page-artist-image"
                                         />
                                     ) : (
-                                        <div className="artist-image-placeholder">
+                                        <div className="artist-page-artist-image-placeholder">
                                             No Image
                                         </div>
                                     )}
                                     <h3>{artist.name}</h3>
-                                    <div className="artist-popularity">
+                                    <div className="artist-page-artist-popularity">
                                         Popularity: {artist.popularity}/100
                                     </div>
-                                    <button onClick={() => getArtistInfo(artist.name)}>Get Artist Info</button>
+                                    <button onClick={() => getArtistInfo(artist.name)} className="artist-page-green-button">Get Artist Info</button>
                                 </div>
                             ))}
                         </div>
@@ -157,39 +157,27 @@ function Artists() {
                         </div>
                     )}
                 </div>
-                <div className="my-stats-busiest-hour">
-                    <h3>Your Busiest Listening Hour</h3>
-                </div>
-                <div className="my-stats-listening-graph">
-                    <h3>Songs Streamed</h3>
-                </div>
-                <div className="my-stats-genres">
-                    <h3>Your Top Genres</h3>
-                </div>
-                <div className="my-stats-reccomendation">
-                    <h3>Your Recommended Songs</h3>
-                </div>
             </div>
 
             {isModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
+                <div className="artist-page-modal">
+                    <div className="artist-page-modal-content">
                         <span className="close" onClick={closeModal}>&times;</span>
                         {artistInfo && (
                             <>
-                                <div className="text-content">
+                                <div className="artist-page-text-content">
                                     <h2>Artist Info</h2>
                                     <p>Name: {artistInfo.name}</p>
                                     <p>Followers: {artistInfo.followers.total}</p>
                                     <p>Popularity: {artistInfo.popularity}</p>
                                     <button
                                         onClick={getArtistSummary}
-                                        className="summary-button"
+                                        className="artist-page-summary-button"
                                         disabled={summaryLoading}
                                     >
                                         {summaryLoading ? (
                                             <>
-                                                <span className="button-spinner"></span>
+                                                <span className="artist-page-button-spinner"></span>
                                                 Generating Summary - this might take a while..
                                             </>
                                         ) : (
@@ -207,12 +195,12 @@ function Artists() {
             )}
 
             {isSummaryModalOpen && !closedArtistInfo && (
-                <div className="modal summary-modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={closeSummaryModal}>&times;</span>
-                        <div className="summary-content">
+                <div className="artist-page-modal summary-modal">
+                    <div className="artist-page-modal-content">
+                        <span className="artist-page-close" onClick={closeSummaryModal}>&times;</span>
+                        <div className="artist-page-summary-content">
                             <h2>{artistInfo.name} Summary</h2>
-                            <div className="artist-summary">
+                            <div className="artist-page-artist-summary">
                                 <p>{artistSummary}</p>
                             </div>
                         </div>
