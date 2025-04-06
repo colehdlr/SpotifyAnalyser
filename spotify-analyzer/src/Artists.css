@@ -1,0 +1,339 @@
+
+.artist-page-artist-card h3 {
+    color: black;
+}
+.artist-page-green-button {
+    background-color: #21a650; /* Light green */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px; /* Smaller font size */
+    transition: background-color 0.3s;
+}
+
+.artist-page-green-button:hover {
+    background-color: #76c776; /* Slightly darker green on hover */
+}
+.artist-page-my-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1600px;
+    margin: 30px auto;
+    background-color: #4B6F44;
+    border-radius: 10px;
+}
+
+.artist-page-modal {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.artist-page-modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  border: none;
+  width: 80%;
+  max-width: 700px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-out;
+  display: flex;
+  flex-direction: row; /* important: horizontal layout */
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+}
+.artist-page-text-content {
+  flex: 1;
+  align-items: left;
+  padding-right: 10px;
+}
+
+.artist-page-modal-content img {
+  max-width: 300px;
+  height: auto;
+  border-radius: 10px;
+  margin-left: 20px;
+  align-self: left;
+}
+
+/* 🛠️ Summary Modal Specific Styling Fixes */
+.artist-page-modal.summary-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.artist-page-summary-content {
+  text-align: center;
+}
+
+.artist-page-artist-summary p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+  max-width: 90%;
+}
+
+
+
+.artist-page-text-content {
+    flex: 1;
+}
+
+.artist-page-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  color: #aaa;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.artist-page-close:hover,
+.artist-page-close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #3498db;
+  animation: spin 1s ease-in-out infinite;
+  margin: 20px auto;
+}
+
+/* New button spinner styling */
+.artist-page-summary-button {
+  position: relative;
+  padding: 10px 20px;
+  background-color: #2e8b57;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  min-width: 120px;
+}
+
+.artist-page-summary-button:hover {
+  background-color: #2a6b3a;
+}
+
+.artist-page-summary-button:disabled {
+  background-color: #7cc19f;
+  cursor: not-allowed;
+}
+
+.artist-page-button-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Summary modal styling */
+.artist-page-loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.artist-page-loading-overlay h3 {
+  margin-bottom: 15px;
+  color: #2e8b57;
+}
+
+.artist-page-loading-overlay p {
+  margin-top: 15px;
+  color: #2a6b3a;
+  font-style: italic;
+}
+
+
+.error-message, .error-alert {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff4d4d;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.artist-page-home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.artist-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.artist-page-time-range-selector {
+    margin-bottom: 20px;
+}
+
+.artist-page-time-range-selector select {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.artist-page-artist-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 10px;
+}
+
+.artist-page-artist-card {
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    max-width: 220px;
+}
+
+.artist-page-artist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.artist-page-artist-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.artist-page-artist-image-placeholder {
+    width: 100%;
+    height: 70px;
+    background-color: #e1e1e1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.raw-data {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+.raw-data pre {
+    margin: 0;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+
+.artist-page-my-stats-artists{
+    background-color: #B8E0D2 ;
+    padding: 20px;
+    border-radius:10px ;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.artist-page-home-container h1{
+    text-align: center;
+    color: #4B6F44 ;
+}
+
+.artist-page-search-input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s;
+}
+
+.artist-page-search-input:focus {
+    border-color: #21a650;
+    outline: none;
+}

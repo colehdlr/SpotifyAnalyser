@@ -9,8 +9,8 @@ export const fetchTopArtists = async () => {
     return artistNameList;
 }
 
-export const searchArtists = async (searchTerm) => {
-    const data = await apiService.searchArtists(searchTerm);
+export const searchArtists = async (searchTerm, limit) => {
+    const data = await apiService.searchArtists(searchTerm, limit);
 
     const artists = data?.artists?.items || [];
 

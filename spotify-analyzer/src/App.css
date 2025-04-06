@@ -288,7 +288,7 @@ body, * {
   max-height: 200px; /* Limit height */
   overflow-y: auto; /* Enable scrolling */
 }
-  
+
 .logout-button {
   background-color: transparent;
   color: white;

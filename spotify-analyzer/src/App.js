@@ -81,11 +81,11 @@ function App() {
                         </Layout>
                     } />
 
-                    <Route path="/settings" element={
-                        <Layout>
-                            <Settings />
-                        </Layout>
-                    } />
+                <Route path="/settings" element={
+                    <Layout>
+                        <Settings />
+                    </Layout>
+                } />
 
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

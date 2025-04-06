@@ -14,7 +14,7 @@ function Navbar({handleLogout}) {
     return (
         <div className="Navbar">
             <ul>
-                <li><Link to={"/home"}>Spotfiy Analyzer</Link></li>
+                <li><Link to={"/home"}>Spotify Analyzer</Link></li>
                 <li><Link to={"/minigames"}>Minigames</Link></li>
                 <li><Link to={"/artists"}>Artists</Link></li>
                 <li><Link to={"/settings"}>Settings</Link></li>
