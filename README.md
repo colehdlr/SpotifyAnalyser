@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### Setting up the workspace
 Start by opening a terminal in your workspace. 
 
-**[IMPORTANT: It is required to have Java version 21 and the latest NodeJS and Maven installed.]**
+**[IMPORTANT: It is required to have Python, Java version 21 and the latest NodeJS and Maven installed.]**
 
 To install Maven, please download the binary from the maven repository. Add MAVEN_HOME into your OS environment variables with the reference pointing to the mvn folder you downloaded. Also, add MAVEN_HOME to the Path variable with it pointing to the binaries folder within the download. Furthermore, add MAVEN_HOME to your IDE's environment variables.
 
@@ -23,6 +23,15 @@ To run the project:
 1. Install Maven dependencies - ```mvn clean install```
 2. Start the backend by running: ```cd backend && mvn spring-boot:run```.
 3. IN A DIFFERENT TERMINAL INSTANCE, start the frontend by running: ```cd spotify-analyzer && npm start```.
+4. In ANOTHER terminal instance, set up the python microservice:
+       - ```cd py-microservice```
+       - IF THIS IS THE FIRST TIME YOU ARE SETTING UP THE PYTHON PROJECT:
+           - Create a venv: ```python -m venv venv```
+           - Activate the venv:
+                      Windows: ```venv\Scripts\activate```
+                      Linux/MacOS: ```source venv/bin/activate```
+           - Install dependencies in the venv: ```pip install -r requirements.txt```
+       - Run main.py: ```python main.py```
 
 
 ### Developing
