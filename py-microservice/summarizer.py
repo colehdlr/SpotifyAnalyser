@@ -40,8 +40,7 @@ def summarize_artist(artist_name):
 
 
 def generate_summary(text):
-    inputs = tokenizer.encode("summarize" + text, return_tensors="pt", max_length=1024)
-
+    inputs = tokenizer.encode("summarize " + text, return_tensors="pt", max_length=1024)
     summary_ids = model.generate(
         inputs,
         max_length=300,
