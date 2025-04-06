@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { apiService } from './services/api';
+import { ThemeProvider } from './services/Theme';
 
 import './App.css';
 import Layout from './components/Layout';
 import Home from './components/Home';
+import Artists from "./components/Artists";
 import Login from './components/Login';
 import Minigames from './components/Minigames';
 import Settings from './components/Settings';
-import Artists from './components/Artists';
 
 function App() {
     const [apiStatus, setApiStatus] = useState({
@@ -54,30 +55,31 @@ function App() {
     }
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Navigate to="/home" />} />
+        <ThemeProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Navigate to="/home" />} />
 
-                <Route path="/login" element={<Login />} />
-                <Route path="/callback" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/callback" element={<Login />} />
 
-                <Route path="/home" element={
-                    <Layout>
-                        <Home />
-                    </Layout>
-                } />
+                    <Route path="/home" element={
+                        <Layout>
+                            <Home />
+                        </Layout>
+                    } />
 
-                <Route path="/minigames" element={
-                    <Layout>
-                        <Minigames />
-                    </Layout>
-                } />
+                    <Route path="/minigames" element={
+                        <Layout>
+                            <Minigames />
+                        </Layout>
+                    } />
 
-                <Route path="/artists" element={
-                    <Layout>
-                        <Artists />
-                    </Layout>
-                } />
+                    <Route path="/artists" element={
+                        <Layout>
+                            <Artists />
+                        </Layout>
+                    } />
 
                 <Route path="/settings" element={
                     <Layout>
@@ -85,16 +87,10 @@ function App() {
                     </Layout>
                 } />
 
-
-                <Route path="/artists" element={
-                    <Layout>
-                        <Artists />
-                    </Layout>
-                } />
-
-                <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-        </BrowserRouter>
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+            </BrowserRouter>
+        </ThemeProvider>
     );
 }
 
