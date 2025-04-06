@@ -13,15 +13,39 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up environment
+      - name: Set up Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: '23'
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         working-directory: spotify-analyzer
         run: npm install
 
-      - name: Run tests
+      - name: Start backend (Spring Boot)
+        working-directory: backend
+        run: mvn spring-boot:run &
+
+      - name: Start Python microservice
+        working-directory: py-microservice
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          python main.py &
+
+      - name: Wait for backend to be ready
+        run: |
+          echo "Waiting for backend to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8080/actuator/health | grep '"status":"UP"' > /dev/null; then
+              echo "Backend is up!"
+              break
+            fi
+            echo "Still waiting... ($i)"
+            sleep 2
+          done
+
+      - name: Run frontend tests
         working-directory: spotify-analyzer
         run: npm test
