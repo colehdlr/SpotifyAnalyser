@@ -32,6 +32,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
           python main.py &
 
       - name: Wait for backend to be ready
