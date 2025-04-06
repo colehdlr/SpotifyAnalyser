@@ -245,10 +245,11 @@ export const apiService = {
         }
     },
 
-    searchArtists: async (searchTerm) => {
+    searchArtists: async (searchTerm, limit) => {
         try {
+        console.log(limit)
             const response = await fetch(
-                `${BACKEND_URL}/spotify/data/search?q=${searchTerm}&limit=3&type=artist`,
+                `${BACKEND_URL}/spotify/data/search?q=${searchTerm}&limit=${limit}&type=artist`,
                 {
                     credentials: 'include'
                 }
@@ -258,7 +259,9 @@ export const apiService = {
                 if (response.status === 401) {
                     throw new Error("Authentication expired. Please login again.");
                 }
-                throw new Error(`Failed to fetch top tracks: ${response.status}`);
+                const errorText = await response.text();
+
+                throw new Error(`Failed to fetch top tracks: ${response.status} ${response.statusText} - ${errorText}`);
             }
 
             return await response.json();
@@ -290,10 +293,10 @@ export const apiService = {
                throw error;
            }
        },
-   getArtistSummary: async (artistID, artistName) => {
+   getArtistSummary: async (artistName) => {
     try {
                const response = await fetch(
-                   `${BACKEND_URL}/spotify/data/artist-summary?artistID=${artistID}&artistName=${artistName}`,
+                   `${BACKEND_URL}/spotify/data/artist-summary?artistName=${artistName}`,
                    {
                        credentials: 'include'
                    }

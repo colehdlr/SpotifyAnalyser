@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
-//import '../App.css';
 import '../Artists.css';
 
 function Artists() {
@@ -16,6 +15,8 @@ function Artists() {
     const [artistSummary, setArtistSummary] = useState(null);
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [closedArtistInfo, setClosedArtistInfo] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchError, setSearchError] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,23 +33,47 @@ function Artists() {
         }
     }, [timeRange]);
 
-    const getArtistInfo = async (artistName) => {
+    const getAnyArtistId = async (artistName) => {
+        const results = await apiService.searchArtists(artistName, "1");
+        return results.artists.items[0].id;
+    }
+
+    const getAnyArtistInfo = async (artistName) => {
+        const artistId = await getAnyArtistId(artistName);
+        console.log(artistId)
+        if (artistId) {
+            getArtistData(artistId);
+        }
+    }
+
+    const getTopArtistInfo = async (artistName) => {
         const artist = topArtists.items.find(artist => artist.name === artistName);
         if (artist) {
-            const data = await apiService.getArtistInfo(artist.id);
+            getArtistData(artist.id);
+        }
+    };
+
+    const getArtistData = async (artistID) => {
+        try {
+            console.log(artistID)
+            const data = await apiService.getArtistInfo(artistID);
+            console.log("Artist data:", data);
             setArtistInfo(data);
             setIsModalOpen(true);
             setClosedArtistInfo(false);
+        } catch (error) {
+            console.error("Error fetching artist data:", error);
+            setError("Failed to load artist data");
         }
-    };
+    }
 
     const getArtistSummary = async () => {
         try {
             if (artistInfo) {
-                    setSummaryLoading(true);
-                    const summary = await apiService.getArtistSummary(artistInfo.id, artistInfo.name);
-                    setArtistSummary(summary["artist_summary"]);
-                    setIsSummaryModalOpen(true);
+                setSummaryLoading(true);
+                const summary = await apiService.getArtistSummary(artistInfo.name);
+                setArtistSummary(summary["artist_summary"]);
+                setIsSummaryModalOpen(true);
             }
         } catch (err) {
             setError("Failed to load artist summary");
@@ -104,6 +129,16 @@ function Artists() {
         setIsSummaryModalOpen(false);
     };
 
+    const handleSearch = () => {
+        if (!searchTerm.trim()) {
+            setSearchError("Please enter a valid artist name");
+            return;
+        }
+        setSearchError('');
+        getAnyArtistInfo(searchTerm);
+        setSearchTerm('');
+    };
+
     if (loading) {
         return <div className="loading-container">Loading your Spotify data...</div>;
     }
@@ -145,10 +180,7 @@ function Artists() {
                                         </div>
                                     )}
                                     <h3>{artist.name}</h3>
-                                    <div className="artist-page-artist-popularity">
-                                        Popularity: {artist.popularity}/100
-                                    </div>
-                                    <button onClick={() => getArtistInfo(artist.name)} className="artist-page-green-button">Get Artist Info</button>
+                                    <button onClick={() => getTopArtistInfo(artist.name)} className="artist-page-green-button">Get Artist Info</button>
                                 </div>
                             ))}
                         </div>
@@ -164,14 +196,17 @@ function Artists() {
                         type="text"
                         placeholder="Enter artist name"
                         className="artist-page-search-input"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                getArtistInfo(e.target.value);
+                                handleSearch();
                             }
                         }}
                     />
-                    <button onClick={() => getArtistInfo(document.querySelector('input').value)} className="artist-page-green-button">Search</button>
-                    </div>
+                    <button onClick={handleSearch} className="artist-page-green-button">Search</button>
+                    {searchError && <div className="error-alert">{searchError}</div>}
+                </div>
             </div>
 
             {isModalOpen && (
@@ -184,7 +219,18 @@ function Artists() {
                                     <h2>Artist Info</h2>
                                     <p>Name: {artistInfo.name}</p>
                                     <p>Followers: {artistInfo.followers.total}</p>
-                                    <p>Popularity: {artistInfo.popularity}</p>
+                                    <p>Popularity: {artistInfo.popularity}/100</p>
+                                    {artistInfo.genres && artistInfo.genres.length > 0 && (
+                                       <p>Genres: {artistInfo.genres.join(', ')}</p>
+                                    )}
+                                    <button
+                                        onClick={() => window.open(artistInfo.external_urls.spotify, '_blank', 'noopener,noreferrer')}
+                                        className="artist-page-summary-button"
+                                    >
+                                        View Details on Spotify
+                                    </button>
+                                    <br />
+                                    <br/>
                                     <button
                                         onClick={getArtistSummary}
                                         className="artist-page-summary-button"

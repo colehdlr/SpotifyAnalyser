@@ -41,7 +41,7 @@ function Minigames() {
             return;
         }
 
-        const results = await searchArtists(guess.toLowerCase());
+        const results = await searchArtists(guess.toLowerCase(), "3");
         setSuggestion(results);
     };
 

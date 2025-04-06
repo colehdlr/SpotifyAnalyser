@@ -420,14 +420,12 @@ public class SpotifyController {
 
     @GetMapping("/data/artist-summary")
     public ResponseEntity<?> getArtistSummary(
-            @RequestParam(value = "artistID") String artistID,
             @RequestParam(value = "artistName") String artistName){
 
         System.out.println("Getting artist summary for: " + artistName);
 
         try {
             ArtistDetails artistDetails = new ArtistDetails();
-            artistDetails.setArtistID(artistID);
             artistDetails.setArtistName(artistName);
 
             String artistDetailJSON = JsonUtil.convertObjectToJson(artistDetails);
