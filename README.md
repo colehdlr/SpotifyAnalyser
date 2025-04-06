@@ -9,6 +9,8 @@ Start by opening a terminal in your workspace.
 
 **[IMPORTANT: It is required to have Python, Java version 21 and the latest NodeJS and Maven installed.]**
 
+You might need to specify the path to your python interpreter in your local IDE
+
 To install Maven, please download the binary from the maven repository. Add MAVEN_HOME into your OS environment variables with the reference pointing to the mvn folder you downloaded. Also, add MAVEN_HOME to the Path variable with it pointing to the binaries folder within the download. Furthermore, add MAVEN_HOME to your IDE's environment variables.
 
 1. Clone repo with ```gh repo clone https://github.com/colehdlr/SpotifyAnalyzer```
