@@ -37,19 +37,6 @@ jobs:
         run: |
           nohup mvn spring-boot:run &
 
-      - name: Wait for Spring Boot app to be ready
-        working-directory: backend
-        run: |
-          echo "Waiting for Spring Boot app to start..."
-          for i in {1..30}; do
-            if curl -s http://localhost:8080/actuator/health | grep '"status":"UP"' > /dev/null; then
-              echo "Spring Boot app is up!"
-              break
-            fi
-            echo "Still waiting... ($i)"
-            sleep 2
-          done
-
       - name: Start Python microservice
         working-directory: py-microservice
         run: |
@@ -58,18 +45,6 @@ jobs:
           pip install -r requirements.txt
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           python main.py &
-
-      - name: Wait for backend to be ready
-        run: |
-          echo "Waiting for backend to start..."
-          for i in {1..30}; do
-            if curl -s http://localhost:8080/actuator/health | grep '"status":"UP"' > /dev/null; then
-              echo "Backend is up!"
-              break
-            fi
-            echo "Still waiting... ($i)"
-            sleep 2
-          done
 
       - name: Run frontend tests
         working-directory: spotify-analyzer
