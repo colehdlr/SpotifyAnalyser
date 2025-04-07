@@ -1,5 +1,8 @@
 package com.spotifyanalyzer.backend.controller;
 
+import com.spotifyanalyzer.backend.authservice.ArtistDetails;
+import com.spotifyanalyzer.backend.authservice.JsonUtil;
+import com.spotifyanalyzer.backend.authservice.PythonService;
 import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
 import com.spotifyanalyzer.backend.authservice.SpotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +26,12 @@ import java.util.stream.Collectors;
 public class SpotifyController {
 
     private final SpotifyService spotifyService;
+    private final PythonService pythonService;
 
     @Autowired
     public SpotifyController(SpotifyService spotifyService) {
         this.spotifyService = spotifyService;
+        this.pythonService = new PythonService();
     }
 
     @GetMapping("/login")
@@ -405,6 +410,86 @@ public class SpotifyController {
                     .body(Map.of("error", "Failed to search",
                             "message", e.getMessage()));
         }
+    }
+
+    @GetMapping("/data/artist-info")
+    public ResponseEntity<?> getArtistInfo(
+            @RequestParam(value = "artist_id") String artistID,
+            HttpSession session) {
+        System.out.println("Getting artist info for: " + artistID);
+        String accessToken = (String) session.getAttribute("spotify_access_token");
+
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "not authenticated with Spotify"));
+        }
+
+        try {
+            // check if token is expired
+            Long expiryTime = (Long) session.getAttribute("spotify_token_expiry");
+            if (expiryTime != null && System.currentTimeMillis() > expiryTime) {
+                // token is expired so attempt a refresh
+                String refreshToken = (String) session.getAttribute("spotify_refresh_token");
+                if (refreshToken != null) {
+                    try {
+                        SpotifyAuthResponse refreshResponse = spotifyService.refreshAccessToken(refreshToken);
+                        session.setAttribute("spotify_access_token", refreshResponse.getAccessToken());
+
+                        // correct our expiry time
+                        long newExpiryTime = System.currentTimeMillis() + (refreshResponse.getExpiresIn() * 1000);
+                        session.setAttribute("spotify_token_expiry", newExpiryTime);
+
+                        accessToken = refreshResponse.getAccessToken();
+                        //System.out.println("Token refreshed successfully");
+                    } catch (Exception e) {
+                        // we can just assume they are logged out and make them log in
+                        //System.out.println("failed to refresh token: " + e.getMessage());
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .body(Map.of("error", "Authentication expired"));
+                    }
+                }
+            }
+
+            // making the actual request to the spotify API
+            Object artistInfo = spotifyService.makeSpotifyRequest(
+                    "/artists/" + artistID,
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Object.class);
+
+            return ResponseEntity.ok(artistInfo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "failed to fetch top artists",
+                            "message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/data/artist-summary")
+    public ResponseEntity<?> getArtistSummary(
+            @RequestParam(value = "artistName") String artistName){
+
+        System.out.println("Getting artist summary for: " + artistName);
+
+        try {
+            ArtistDetails artistDetails = new ArtistDetails();
+            artistDetails.setArtistName(artistName);
+
+            String artistDetailJSON = JsonUtil.convertObjectToJson(artistDetails);
+            System.out.println("Sending artist summary request to python service" + artistDetailJSON);
+
+            String artistSummary = pythonService.sendPOST(artistDetailJSON);
+            System.out.println(artistSummary);
+            return ResponseEntity.ok(artistSummary);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "failed to fetch artist summary",
+                            "message", e.getMessage()));
+        }
+
+
+
     }
 
     @PostMapping("/logout")

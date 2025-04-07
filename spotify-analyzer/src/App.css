@@ -1,3 +1,40 @@
+:root {
+  /* Light theme (default) */
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --card-background: #f5f5f5;
+  --border-color: #e0e0e0;
+  --button-background: #1DB954;
+  --button-text: #ffffff;
+}
+
+[data-theme='dark'] {
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --card-background: #282828;
+  --border-color: #333333;
+  --button-background: #1DB954;
+  --button-text: #ffffff;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+body, * {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+}
+
+.button {
+  background-color: var(--button-background);
+  color: var(--button-text);
+}
+
 .App {
   margin: 0;
   padding: 0;
@@ -251,7 +288,7 @@
   max-height: 200px; /* Limit height */
   overflow-y: auto; /* Enable scrolling */
 }
-  
+
 .logout-button {
   background-color: transparent;
   color: white;

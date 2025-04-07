@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { fetchTopArtists, searchArtists } from '../services/minigameHandler';
+import { Theme } from '../services/Theme';
 import '../App.css';
 
 function Minigames() {
+    const { isDarkMode } = useContext(Theme);
     const [artists, setArtists] = useState([]);
     const [guess, setGuess] = useState("");
     const [suggestion, setSuggestion] = useState(null);
@@ -41,7 +43,7 @@ function Minigames() {
             return;
         }
 
-        const results = await searchArtists(guess.toLowerCase());
+        const results = await searchArtists(guess.toLowerCase(), "3");
         setSuggestion(results);
     };
 
@@ -57,7 +59,7 @@ function Minigames() {
     };
 
     return (
-        <div className="Minigames">
+        <div className={`Minigames ${isDarkMode ? 'dark' : 'light'}`}>
             <h1>Guess Artists Rankings</h1>
             <p>Can you guess your recent top ten artists?</p>
 

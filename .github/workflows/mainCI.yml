@@ -13,15 +13,39 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up environment
+      - name: Set up Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: '23'
+          
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.7.0
+        with:
+          distribution: 'zulu'
+          java-version: '21'
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         working-directory: spotify-analyzer
         run: npm install
+    
+      - name: Build with Maven
+        working-directory: backend
+        run: mvn clean install -DskipTests
 
-      - name: Run tests
+      - name: Start Spring Boot application
+        working-directory: backend
+        run: |
+          nohup mvn spring-boot:run &
+
+      - name: Start Python microservice
+        working-directory: py-microservice
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          python main.py &
+
+      - name: Run frontend tests
         working-directory: spotify-analyzer
         run: npm test
