@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
+import { Theme } from "../services/Theme";
 import '../Artists.css';
+import '../App.css';
 
 function Artists() {
+    const {isDarkMode} = useContext(Theme)
     const [accessToken, setAccessToken] = useState(sessionStorage.getItem('spotify_access_token'));
     const [topArtists, setTopArtists] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -144,7 +147,7 @@ function Artists() {
     }
 
     return (
-        <div className="artist-page-home-container">
+        <div className={`artist-page-home-container ${isDarkMode ? 'dark' : 'light'}`}>
             <div className="header">
                 <h1>Overview of Your Favourite Artists</h1>
                 <button onClick={handleLogout} className="logout-button">Logout</button>
