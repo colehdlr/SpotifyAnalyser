@@ -281,7 +281,7 @@
 
 .home-container h1{
     text-align: center;
-    color: #4B6F44 ;
+    color: var(--primary-color);
 }
 
 
