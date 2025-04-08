@@ -201,7 +201,7 @@ const Home = () => {
                             <span className="genre-name">{topGenre}</span>
                         </div>
                     ) : (
-                        <p>Loading...</p>
+                        <p>No Genre Found</p>
                     )}
                 </div>
                 <div className="my-stats-hour">
