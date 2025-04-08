@@ -345,3 +345,24 @@ body, * {
   background-color: #006400;
   color: white;
 }
+
+.modeToggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modeToggle button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #ccc;
+  transition: background-color 0.2s ease;
+}
+
+.modeToggle button.active {
+  background-color: #2e8b57;
+  color: white;
+}

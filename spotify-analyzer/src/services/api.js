@@ -199,7 +199,31 @@ export const apiService = {
 
 
 
+    
+    searchTracks: async (searchTerm, limit) => {
+        try {
+            const response = await fetch(
+                `${BACKEND_URL}/spotify/data/search?q=${searchTerm}&limit=${limit}&type=track`,
+                {
+                    credentials: 'include'
+                }
+            );
 
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error("Authentication expired. Please login again.");
+                }
+                const errorText = await response.text();
+
+                throw new Error(`Failed to fetch top tracks: ${response.status} ${response.statusText} - ${errorText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching top tracks:', error);
+            throw error;
+        }
+    },
 
 
 
