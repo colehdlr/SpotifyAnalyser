@@ -315,6 +315,200 @@ export const apiService = {
                console.error('Error fetching artist info:', error);
                throw error;
            }
+   },
+    // ARTIST RELATED API FUNCTIONS
+    // -----------------------------
+    // Add a new artist
+   addArtist: async (artist) => {
+       try {
+           const response = await fetch(`${BACKEND_URL}/db/artists/add`, {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(artist),
+               credentials: 'include'
+           });
+
+           if (!response.ok) {
+               throw new Error(`Failed to add artist: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error adding artist:', error);
+           throw error;
+       }
+   },
+
+   // Get all registered artists
+   getAllArtists: async () => {
+       try {
+           const response = await fetch(`${BACKEND_URL}/db/artists/getAllArtists`, {
+               credentials: 'include'
+           });
+
+           if (!response.ok) {
+               throw new Error(`Failed to fetch artists: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error fetching all artists:', error);
+           throw error;
+       }
+   },
+
+   // Update artist summary
+   updateArtistSummary: async (artistName, summary) => {
+       try {
+           const response = await fetch(
+               `${BACKEND_URL}/db/artists/updateArtistSummary?artistName=${encodeURIComponent(artistName)}&summary=${encodeURIComponent(summary)}`,
+               {
+                   method: 'PUT',
+                   credentials: 'include'
+               }
+           );
+
+           if (!response.ok) {
+               throw new Error(`Failed to update artist summary: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error updating artist summary:', error);
+           throw error;
+       }
+   },
+
+   // Get artist by name
+   getArtistByName: async (artistName) => {
+       try {
+           const response = await fetch(
+               `${BACKEND_URL}/db/artists/getArtistByName?artistName=${encodeURIComponent(artistName)}`,
+               {
+                   credentials: 'include'
+               }
+           );
+
+           if (!response.ok) {
+               throw new Error(`Failed to fetch artist: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error fetching artist by name:', error);
+           throw error;
+       }
+   },
+
+   // User-related API functions
+   // -------------------------
+
+   // Register a new user
+   registerUser: async (user) => {
+       try {
+           const response = await fetch(`${BACKEND_URL}/db/users/register`, {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(user),
+               credentials: 'include'
+           });
+
+           if (!response.ok) {
+               throw new Error(`Failed to register user: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error registering user:', error);
+           throw error;
+       }
+   },
+
+   // Get all registered users
+   getAllUsers: async () => {
+       try {
+           const response = await fetch(`${BACKEND_URL}/db/users/getAllusers`, {
+               credentials: 'include'
+           });
+
+           if (!response.ok) {
+               throw new Error(`Failed to fetch users: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error fetching all users:', error);
+           throw error;
+       }
+   },
+
+   // Get top minigame players
+   getTopMinigamePlayers: async () => {
+       try {
+           const response = await fetch(`${BACKEND_URL}/db/users/topMinigamePlayers`, {
+               credentials: 'include'
+           });
+
+           if (!response.ok) {
+               throw new Error(`Failed to fetch top minigame players: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error fetching top minigame players:', error);
+           throw error;
+       }
+   },
+
+   // Get user's minigame time
+   getUserMinigameTime: async (username) => {
+       try {
+           const response = await fetch(
+               `${BACKEND_URL}/db/users/userMinigameTime?username=${encodeURIComponent(username)}`,
+               {
+                   credentials: 'include'
+               }
+           );
+
+           if (!response.ok) {
+               throw new Error(`Failed to fetch user minigame time: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error fetching user minigame time:', error);
+           throw error;
+       }
+   },
+
+   // Update user's minigame time
+   updateMinigameTime: async (username, newTime) => {
+       try {
+           const response = await fetch(
+               `${BACKEND_URL}/db/users/updateMinigameTime?username=${encodeURIComponent(username)}&newTime=${newTime}`,
+               {
+                   method: 'PUT',
+                   credentials: 'include'
+               }
+           );
+
+           if (!response.ok) {
+               if (response.status === 400) {
+                   // Handle case where new time isn't better than previous time
+                   throw new Error(`New time isn't better than previous best time`);
+               }
+               throw new Error(`Failed to update minigame time: ${response.status}`);
+           }
+
+           return await response.json();
+       } catch (error) {
+           console.error('Error updating minigame time:', error);
+           throw error;
+       }
    }
 
 
