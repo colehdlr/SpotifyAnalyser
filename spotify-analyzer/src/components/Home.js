@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Theme } from "../services/Theme";
+import BlurPanel from "../services/BlurPanel"
 import '../App.css';
 import '../Home.css';
 
@@ -125,90 +126,91 @@ const Home = () => {
                 </select>
             </div>
 
-            <div className="my-stats">
-                <div className="my-stats-artists">
-                    <h3>Your Top Artists</h3>
-                    {topArtists?.items?.length > 0 ? (
-                        <div className="artist-grid">
-                            {topArtists.items.map((artist) => (
-                                <div key={artist.id} className="artist-card">
-                                    {artist.images?.[0] ? (
+            <BlurPanel>
+                <div className="my-stats">
+                    <div className="my-stats-artists">
+                        <h3>Your Top Artists</h3>
+                        {topArtists?.items?.length > 0 ? (
+                            <div className="artist-grid">
+                                {topArtists.items.map((artist) => (
+                                    <div key={artist.id} className="artist-card">
+                                        {artist.images?.[0] ? (
+                                            <img
+                                                src={artist.images[0].url}
+                                                alt={artist.name}
+                                                className="artist-image"
+                                            />
+                                        ) : (
+                                            <div className="artist-image-placeholder">No Image</div>
+                                        )}
+                                        <h4 className="artist-name">{artist.name}</h4>
+                                        <div className="artist-popularity">
+                                            Popularity: {artist.popularity}/100
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="no-data">
+                                <p>No artists found. You might need to listen to more music on Spotify.</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="my-stats-recently-played">
+                        <h3>Your Recently Played Tracks</h3>
+                        {recentTracks && recentTracks.items ? (
+                            <ul className="recent-tracks-list">
+                                {recentTracks.items.slice(0, 10).map((item) => (
+                                    <li key={item.played_at} className="recent-track">
+                                        <img src={item.track.album.images[0]?.url} alt={item.track.name} className="recent-track-image" />
+                                        <div className="recent-track-info">
+                                            <div className="track-name">{item.track.name}</div>
+                                            <div className="track-artist">{item.track.artists.map((a) => a.name).join(", ")}</div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No recent tracks found.</p>
+                        )}
+                    </div>
+                    <div className="my-stats-reccomendation">
+                        <h3>Recommendations Based on Your Recent Listen</h3>
+                        {recommendations && recommendations.length > 0 ? (
+                            <ul className="recent-tracks-list">
+                                {recommendations.slice(0, 10).map((track) => (
+                                    <li key={track.id} className="recent-track">
                                         <img
-                                            src={artist.images[0].url}
-                                            alt={artist.name}
-                                            className="artist-image"
+                                            src={track.album.images[0]?.url}
+                                            alt={track.name}
+                                            className="recent-track-image"
                                         />
-                                    ) : (
-                                        <div className="artist-image-placeholder">No Image</div>
-                                    )}
-                                    <h4 className="artist-name">{artist.name}</h4>
-                                    <div className="artist-popularity">
-                                        Popularity: {artist.popularity}/100
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="no-data">
-                            <p>No artists found. You might need to listen to more music on Spotify.</p>
-                        </div>
-                    )}
+                                        <div className="recent-track-info">
+                                            <div className="track-name">{track.name}</div>
+                                            <div className="track-artist">{track.artists.map((a) => a.name).join(", ")}</div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No recommendations found.</p>
+                        )}
+                    </div>
+                    <div className="my-stats-genres">
+                        <h3>Your Top Genre</h3>
+                        {topGenre ? (
+                            <div className="genre-card">
+                                <span className="genre-name">{topGenre}</span>
+                            </div>
+                        ) : (
+                            <p>No Genre Found</p>
+                        )}
+                    </div>
+                    <div className="my-stats-hour">
+                        <h3>Your Busiest Listening Hour</h3>
+                    </div>
                 </div>
-                <div className="my-stats-recently-played">
-                    <h3>Your Recently Played Tracks</h3>
-                    {recentTracks && recentTracks.items ? (
-                        <ul className="recent-tracks-list">
-                            {recentTracks.items.slice(0, 10).map((item) => (
-                                <li key={item.played_at} className="recent-track">
-                                    <img src={item.track.album.images[0]?.url} alt={item.track.name} className="recent-track-image" />
-                                    <div className="recent-track-info">
-                                        <div className="track-name">{item.track.name}</div>
-                                        <div className="track-artist">{item.track.artists.map((a) => a.name).join(", ")}</div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No recent tracks found.</p>
-                    )}
-                </div>
-                <div className="my-stats-reccomendation">
-                    <h3>Recommendations Based on Your Recent Listen</h3>
-                    {recommendations && recommendations.length > 0 ? (
-                        <ul className="recent-tracks-list">
-                            {recommendations.slice(0, 10).map((track) => (
-                                <li key={track.id} className="recent-track">
-                                    <img
-                                        src={track.album.images[0]?.url}
-                                        alt={track.name}
-                                        className="recent-track-image"
-                                    />
-                                    <div className="recent-track-info">
-                                        <div className="track-name">{track.name}</div>
-                                        <div className="track-artist">{track.artists.map((a) => a.name).join(", ")}</div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No recommendations found.</p>
-                    )}
-                </div>
-                <div className="my-stats-genres">
-                    <h3>Your Top Genre</h3>
-                    {topGenre ? (
-                        <div className="genre-card">
-                            <span className="genre-name">{topGenre}</span>
-                        </div>
-                    ) : (
-                        <p>No Genre Found</p>
-                    )}
-                </div>
-                <div className="my-stats-hour">
-                    <h3>Your Busiest Listening Hour</h3>
-                </div>
-            </div>
-
+            </BlurPanel>
         </div>
     );
 };

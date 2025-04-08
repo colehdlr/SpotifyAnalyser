@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Theme } from "../services/Theme";
+import BlurPanel from "../services/BlurPanel"
 import '../Artists.css';
 import '../App.css';
 
@@ -165,51 +166,53 @@ function Artists() {
             </div>
 
             <div className="artist-page-my-stats">
-                <div className="artist-page-my-stats-artists">
-                    <h3>Your Top Artists</h3>
-                    {topArtists && topArtists.items && topArtists.items.length > 0 ? (
-                        <div className="artist-page-artist-grid">
-                            {topArtists.items.map((artist) => (
-                                <div key={artist.id} className="artist-page-artist-card">
-                                    {artist.images && artist.images.length > 0 ? (
-                                        <img
-                                            src={artist.images[0].url}
-                                            alt={artist.name}
-                                            className="artist-page-artist-image"
-                                        />
-                                    ) : (
-                                        <div className="artist-page-artist-image-placeholder">
-                                            No Image
-                                        </div>
-                                    )}
-                                    <h3>{artist.name}</h3>
-                                    <button onClick={() => getTopArtistInfo(artist.name)} className="artist-page-green-button">Get Artist Info</button>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="no-data">
-                            <p>No artists found. You might need to listen to more music on Spotify.</p>
-                        </div>
-                    )}
-                </div>
-                <div className="artist-page-my-stats-artists">
-                    <h3>Search for an Artist</h3>
-                    <input
-                        type="text"
-                        placeholder="Enter artist name"
-                        className="artist-page-search-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSearch();
-                            }
-                        }}
-                    />
-                    <button onClick={handleSearch} className="artist-page-green-button">Search</button>
-                    {searchError && <div className="error-alert">{searchError}</div>}
-                </div>
+                <BlurPanel>
+                    <div className="artist-page-my-stats-artists">
+                        <h3>Your Top Artists</h3>
+                        {topArtists && topArtists.items && topArtists.items.length > 0 ? (
+                            <div className="artist-page-artist-grid">
+                                {topArtists.items.map((artist) => (
+                                    <div key={artist.id} className="artist-page-artist-card">
+                                        {artist.images && artist.images.length > 0 ? (
+                                            <img
+                                                src={artist.images[0].url}
+                                                alt={artist.name}
+                                                className="artist-page-artist-image"
+                                            />
+                                        ) : (
+                                            <div className="artist-page-artist-image-placeholder">
+                                                No Image
+                                            </div>
+                                        )}
+                                        <h3>{artist.name}</h3>
+                                        <button onClick={() => getTopArtistInfo(artist.name)} className="artist-page-green-button">Get Artist Info</button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="no-data">
+                                <p>No artists found. You might need to listen to more music on Spotify.</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="artist-page-my-stats-artists">
+                        <h3>Search for an Artist</h3>
+                        <input
+                            type="text"
+                            placeholder="Enter artist name"
+                            className="artist-page-search-input"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
+                            }}
+                        />
+                        <button onClick={handleSearch} className="artist-page-green-button">Search</button>
+                        {searchError && <div className="error-alert">{searchError}</div>}
+                    </div>
+                </BlurPanel>
             </div>
 
             {isModalOpen && (
