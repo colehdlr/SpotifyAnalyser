@@ -358,11 +358,11 @@ body, * {
   border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
-  background-color: #ccc;
+  background-color: var(--background-color);
   transition: background-color 0.2s ease;
 }
 
 .modeToggle button.active {
-  background-color: #2e8b57;
+  background-color: var(--button-background);
   color: white;
 }
