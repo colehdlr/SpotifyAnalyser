@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/db/users")
@@ -64,20 +66,63 @@ public class UserDatabaseController
 
     //update the user minigame time if it is less than the previous time
     @PutMapping("/updateMinigameTime")
-    public ResponseEntity<User> updateMinigameTime(@RequestParam String username, @RequestParam long newTime) throws Exception
-    {
-        User user = userService.getUserMinigameTime(username);
-        if (user != null)
-        {
-            if (newTime < user.getMinigameBestTimeInSeconds())
-            {
+    public ResponseEntity<?> updateMinigameTime(@RequestParam String username, @RequestParam long newTime) {
+        try {
+            User user;
+            boolean isNewUser = false;
+
+            try {
+                user = userService.getUserMinigameTime(username);
+            } catch (Exception e) {
+                user = new User(username, newTime);
+                isNewUser = true;
+            }
+
+            if (isNewUser || newTime < user.getMinigameBestTimeInSeconds()) {
                 user.setMinigameBestTimeInSeconds(newTime);
                 userService.registerUser(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("user", user);
+                response.put("isNewUser", isNewUser);
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "New time is not better than previous best time");
+                response.put("currentBestTime", user.getMinigameBestTimeInSeconds());
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    Map.of("error", "Failed to update minigame time: " + e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @DeleteMapping("/deleteMinigameScore")
+    public ResponseEntity<?> deleteMinigameScore(@RequestParam String username) {
+        try {
+            boolean deleted = userService.deleteMinigameScore(username);
+
+            if (deleted) {
+                return new ResponseEntity<>(
+                        Map.of("message", "Minigame score deleted successfully"),
+                        HttpStatus.OK
+                );
+            } else {
+                return new ResponseEntity<>(
+                        Map.of("message", "No score found to delete"),
+                        HttpStatus.OK
+                );
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    Map.of("error", "Error: " + e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
 

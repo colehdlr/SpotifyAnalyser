@@ -7,14 +7,14 @@ const BlurPanel = ({ children }) => {
     const [isBlurred, setIsBlurred] = useState(true);
     const [showPopup, setShowPopup] = useState(true);
 
-    // useEffect(() => {
-    //     const gameCompleted = localStorage.getItem('gameCompleted') === 'true';
-    //
-    //     if (gameCompleted) {
-    //         setIsBlurred(false);
-    //         setShowPopup(false);
-    //     }
-    // }, []);
+    useEffect(() => {
+        const gameCompleted = localStorage.getItem('gameCompleted') === 'true';
+
+        if (gameCompleted) {
+            setIsBlurred(false);
+            setShowPopup(false);
+        }
+    }, []);
 
     const handlePanelClick = () => {
         if (isBlurred) {

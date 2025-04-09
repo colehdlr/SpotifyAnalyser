@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { fetchTopArtists, searchArtists, fetchTopTracks, searchTracks } from '../services/minigameHandler';
 import { Theme } from '../services/Theme';
+import { apiService } from '../services/api'
 import '../App.css';
 
 function Minigames() {
@@ -12,16 +13,36 @@ function Minigames() {
     const [guess, setGuess] = useState("");
     const [suggestion, setSuggestion] = useState(null);
     const [suggestionClicked, setSuggestionClicked] = useState(false);
+    const [userProfile, setUserProfile] = useState(null);
 
     const [startTime, setStartTime] = useState(null);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [timerActive, setTimerActive] = useState(false);
+    const [gameComplete, setGameComplete] = useState(false);
+    const [scoreMessage, setScoreMessage] = useState("");
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const status = await apiService.checkSpotifyStatus();
+                if (status.authenticated && status.profile) {
+                    setUserProfile(status.profile);
+                }
+            } catch (error) {
+                console.error("error fetching user's profile:", error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
 
     useEffect(() => {
         const loadData = async () => {
             setStartTime(null);
             setElapsedTime(0);
             setTimerActive(false);
+            setGameComplete(false);
+            setScoreMessage("");
 
             switch (mode) {
                 case "artists":
@@ -56,8 +77,37 @@ function Minigames() {
 
         if (allRevealed) {
             setTimerActive(false);
+            setGameComplete(true);
+
+            localStorage.setItem('gameCompleted', 'true');
+            saveHighScore();
         }
-    }, [artists, tracks, mode]);
+    }, [artists, tracks, mode, timerActive]);
+
+    const saveHighScore = async () => {
+        if (!userProfile || !userProfile.display_name) {
+            setScoreMessage("Login to save your score!");
+            return;
+        }
+
+        try {
+            // Since our backend now handles both new users and existing users,
+            // we can directly call updateMinigameTime without checking first
+            const response = await apiService.updateMinigameTime(userProfile.display_name, elapsedTime);
+
+            // Handle the response
+            if (response.isNewUser) {
+                setScoreMessage(`First score recorded: ${elapsedTime}s`);
+            } else if (response.user) {
+                setScoreMessage(`New high score: ${elapsedTime}s!`);
+            } else {
+                setScoreMessage(`Your best score is still: ${response.currentBestTime}s`);
+            }
+        } catch (error) {
+            console.error("Error saving high score:", error);
+            setScoreMessage("Error saving your score. Try again later.");
+        }
+    };
 
     const handleGuess = () => {
         if (!timerActive && !startTime) {
@@ -147,6 +197,7 @@ function Minigames() {
                 ) : (
                     <p>Guess to begin!</p>
                 )}
+                {gameComplete && <p className="completion-message">Congratulations! You've revealed all items!</p>}
             </div>
 
             <ol className="artistList">
