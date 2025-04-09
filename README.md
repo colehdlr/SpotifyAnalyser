@@ -1,4 +1,4 @@
-# Spotify Analyzer
+  # Spotify Analyzer
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -12,7 +12,8 @@ Start by opening a terminal in your workspace.
 To install Maven, please download the binary from the maven repository. Add MAVEN_HOME into your OS environment variables with the reference pointing to the mvn folder you downloaded. Also, add MAVEN_HOME to the Path variable with it pointing to the binaries folder within the download. Furthermore, add MAVEN_HOME to your IDE's environment variables.
 
 1. Clone repo with ```gh repo clone https://github.com/colehdlr/SpotifyAnalyzer```
-2. Get dependecies for Spring Boot and React by running from root directory: ```cd spotify-analyzer && npm install && cd ../spotify-analyzer && npm install```.
+2. Get dependecies for Spring Boot and React by running from root directory: ```cd spotify-analyzer && npm install```.
+3. Get MongoDB dependency ```cd ../backend && npm install mongodb```
 
 
 ### Running the environment
