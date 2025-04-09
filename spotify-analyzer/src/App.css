@@ -1,11 +1,21 @@
 :root {
-  /* Light theme (default) */
   --background-color: #ffffff;
   --text-color: #333333;
   --card-background: #f5f5f5;
   --border-color: #e0e0e0;
   --button-background: #1DB954;
   --button-text: #ffffff;
+  --primary-color: #4B6F44;
+  --secondary-color: #B8E0D2;
+  --navbar-background: #4B6F44;
+  --navbar-text: #ffffff;
+  --card-text: #333333;
+  --section-background: #4B6F44;
+  --section-item-background: #B8E0D2;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --hover-shadow: rgba(0, 0, 0, 0.2);
+  --error-background: rgba(255, 0, 0, 0.1);
+  --error-text: #ff4d4d;
 }
 
 [data-theme='dark'] {
@@ -15,12 +25,24 @@
   --border-color: #333333;
   --button-background: #1DB954;
   --button-text: #ffffff;
+  --primary-color: #6a9e62;
+  --secondary-color: #2a4d3e;
+  --navbar-background: #2a4d3e;
+  --navbar-text: #ffffff;
+  --card-text: #ffffff;
+  --section-background: #2a4d3e;
+  --section-item-background: #3a5d4e;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --hover-shadow: rgba(0, 0, 0, 0.4);
+  --error-background: rgba(255, 0, 0, 0.2);
+  --error-text: #ff6b6b;
 }
 
 body {
   background-color: var(--background-color);
   color: var(--text-color);
 }
+
 body, * {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -39,13 +61,13 @@ body, * {
   margin: 0;
   padding: 0;
   height: 100vh;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .Navbar {
-  background-color: #4B6F44 ;
+  background-color: var(--navbar-background);
   height: 85px;
-  outline: solid 2px #164716;
+  outline: solid 2px var(--border-color);
   padding: 0 30px;
   line-height: 70px;
   border-radius: 60px;
@@ -53,7 +75,7 @@ body, * {
   justify-content: space-around;
   align-items: center;
   position: relative;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 20px var(--card-shadow);
   width: 60%;
   margin: 40px auto
 }
@@ -72,7 +94,7 @@ body, * {
 }
 
 .Navbar a {
-  color: white;
+  color: var(--navbar-text);
   font-size: larger;
   font-weight: bolder;
   text-decoration: none;
@@ -83,69 +105,69 @@ body, * {
 }
 
 .Navbar a:hover {
-  background-color: #223a1f;
-  transform: scale(1.1) ;
+  background-color: rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
 }
 
 .Home {
-  background-color: white;
+  background-color: var(--background-color);
   height: calc(100vh - 80px);
 }
 
 .Home h1 {
   margin: 0;
-  color: #4B6F44;
+  color: var(--primary-color);
   text-align: center;
 }
 
 .Home p {
-  color: #4B6F44;
+  color: var(--text-color);
 }
 
 .Minigames {
-  background-color: white;
+  background-color: var(--background-color);
   height: calc(100vh - 80px);
 }
 
 .Minigames h1 {
   margin: 0;
-  color: #4B6F44;
+  color: var(--primary-color);
 }
 
 .Minigames p {
-  color: #4B6F44;
+  color: var(--text-color);
 }
 
 .Settings {
-  background-color: white;
+  background-color: var(--background-color);
   height: calc(100vh - 80px);
 }
 
 .Settings h1 {
   margin: 0;
-  color: #4B6F44;
+  color: var(--primary-color);
 }
 
 .Settings p {
-  color: #4B6F44;
+  color: var(--text-color);
 }
 
 .Login {
-  background-color: white;
+  background-color: var(--background-color);
   height: calc(100vh - 80px);
 }
 
 .Login h1 {
   margin: 0;
-  color: #4B6F44;
+  color: var(--primary-color);
 }
 
 .Login p {
-  color: #4B6F44;
+  color: var(--text-color);
 }
 
 .LoadingScreen {
-  background-color: white;
+  background-color: var(--background-color);
   height: calc(100vh);
   display: flex;
   align-items: center;
@@ -154,7 +176,7 @@ body, * {
 
 .LoadingScreen h2 {
   margin: 0;
-  color: #4B6F44;
+  color: var(--primary-color);
 }
 
 .Minigames {
@@ -206,15 +228,15 @@ body, * {
 }
 
 .artistPill.hidden {
-  background-color: black;
-  color: black;
+  background-color: var(--card-background);
+  color: var(--card-background);
   pointer-events: none;
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
 }
 
 .artistPill.shown {
-  background-color: white;
-  color: black;
+  background-color: var(--card-background);
+  color: var(--text-color);
   border: 2px solid #2e8b57;
   animation: fadeIn 0.5s ease-in-out;
 }
@@ -226,12 +248,12 @@ body, * {
 
 @keyframes fadeIn {
   from {
-      opacity: 0;
-      transform: scale(0.9);
+    opacity: 0;
+    transform: scale(0.9);
   }
   to {
-      opacity: 1;
-      transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -243,8 +265,8 @@ body, * {
 .guessButton {
   padding: 10px 15px;
   font-size: 16px;
-  background-color: #2e8b57;
-  color: white;
+  background-color: var(--button-background);
+  color: var(--button-text);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -270,6 +292,8 @@ body, * {
   border-radius: 5px;
   width: 200px;
   transition: border 0.3s ease-in-out;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .suggestionsList {
@@ -282,16 +306,16 @@ body, * {
   left: 0;
   z-index: 10; /* Ensure it's above other content */
   border: 1px solid #2e8b57;
-  background-color: white;
+  background-color: var(--card-background);
   border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--card-shadow);
   max-height: 200px; /* Limit height */
   overflow-y: auto; /* Enable scrolling */
 }
 
 .logout-button {
   background-color: transparent;
-  color: white;
+  color: var(--navbar-text);
   border: none;
   cursor: pointer;
   font-size: 24px;
@@ -309,6 +333,7 @@ body, * {
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   font-size: 16px;
+  color: var(--text-color);
 }
 
 .suggestionItem:hover {

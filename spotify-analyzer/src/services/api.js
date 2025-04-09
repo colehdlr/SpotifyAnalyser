@@ -247,7 +247,6 @@ export const apiService = {
 
     searchArtists: async (searchTerm, limit) => {
         try {
-        console.log(limit)
             const response = await fetch(
                 `${BACKEND_URL}/spotify/data/search?q=${searchTerm}&limit=${limit}&type=artist`,
                 {

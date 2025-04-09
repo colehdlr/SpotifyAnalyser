@@ -10,6 +10,7 @@
     border-radius: 8px;
     margin-bottom: 20px;
     padding: 20px;
+    box-shadow: 0 2px 4px var(--card-shadow);
 }
 
 .setting-item {
@@ -18,12 +19,14 @@
     align-items: center;
     padding: 10px 0;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
 }
 
 .setting-item:last-child {
     border-bottom: none;
 }
 
+/* Toggle Switch Styling */
 .switch {
     position: relative;
     display: inline-block;
@@ -60,11 +63,11 @@
 }
 
 input:checked + .slider {
-    background-color: #1DB954;
+    background-color: var(--button-background);
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #1DB954;
+    box-shadow: 0 0 1px var(--button-background);
 }
 
 input:checked + .slider:before {
@@ -77,4 +80,13 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.settings-container h1,
+.settings-container h2 {
+    color: var(--primary-color);
+}
+
+.settings-container p {
+    color: var(--text-color);
 }
