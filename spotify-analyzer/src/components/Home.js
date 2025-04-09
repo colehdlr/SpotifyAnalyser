@@ -15,7 +15,8 @@ const Home = () => {
     const [timeRange, setTimeRange] = useState('medium_term');
     const navigate = useNavigate();
     const [recentTracks, setRecentTracks] = useState(null);
-    const [recommendations, setRecommendations] = useState([])
+    const [recommendations, setRecommendations] = useState([]);
+    const [topGenre, setTopGenre] = useState(null);
 
 
     const fetchRecentlyPlayed = async () => {
@@ -34,7 +35,18 @@ const Home = () => {
         }catch (err) {
             console.error("Error fetching reccommendations:", err);
         }
-    }
+    };
+
+    const fetchTopGenre = async () => {
+        try {
+            const genre = await apiService.getTopGenre();
+            setTopGenre(genre);
+        } catch (error) {
+            console.error("Error loading top genre:", error);
+        }
+    };
+
+
 
 
     // check authentication (mounting on to Home component)
@@ -47,6 +59,7 @@ const Home = () => {
         fetchTopArtists();
         fetchRecentlyPlayed();
         fetchReccomendations();
+        fetchTopGenre();
     }, [accessToken, navigate]);
 
     // whenever the time period changes we need to refresh - this does that with timeRange as a param
@@ -184,10 +197,17 @@ const Home = () => {
                         )}
                     </div>
                     <div className="my-stats-genres">
-                        <h3>Your Top Genres</h3>
+                        <h3>Your Top Genre</h3>
+                        {topGenre ? (
+                            <div className="genre-card">
+                                <span className="genre-name">{topGenre}</span>
+                            </div>
+                        ) : (
+                            <p>No Genre Found</p>
+                        )}
                     </div>
-                    <div className="my-stats-listening-graph">
-                        <h3>[not chosen yet]</h3>
+                    <div className="my-stats-hour">
+                        <h3>Your Busiest Listening Hour</h3>
                     </div>
                 </div>
             </BlurPanel>

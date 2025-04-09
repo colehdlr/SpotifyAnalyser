@@ -271,6 +271,54 @@ public class SpotifyController {
         }
     }
 
+    //endpoint for top genre does not exist - extracting it from top artists
+    @GetMapping("/data/top-genre")
+    public ResponseEntity<?> getTopGenre(HttpSession session) {
+        String accessToken = (String) session.getAttribute("spotify_access_token");
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Not authenticated with Spotify"));
+        }
+
+        try {
+            Map<String, Object> topArtists = spotifyService.makeSpotifyRequest(
+                    "/me/top/artists?limit=20",
+                    HttpMethod.GET,
+                    accessToken,
+                    null,
+                    Map.class
+            );
+
+            List<Map<String, Object>> items = (List<Map<String, Object>>) topArtists.get("items");
+            Map<String, Integer> genreCounts = new HashMap<>();
+
+            for (Map<String, Object> artist : items) {
+                Object genreObj = artist.get("genres");
+                if (genreObj instanceof List<?> genres) {
+                    for (Object g : genres) {
+                        if (g instanceof String genre) {
+                            genreCounts.put(genre, genreCounts.getOrDefault(genre, 0) + 1);
+                        }
+                    }
+                }
+            }
+
+            String topGenre = genreCounts.entrySet().stream()
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .orElse("Unknown");
+
+            return ResponseEntity.ok(Map.of("topGenre", topGenre));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch top genre", "details", e.getMessage()));
+        }
+    }
+
+
+
+
 
     // end point for getting the tracks a user has JUST listened too
     @GetMapping("/data/recently-played")
