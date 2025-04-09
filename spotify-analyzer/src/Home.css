@@ -172,7 +172,11 @@
     border-radius:10px ;
     grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
 }
-.my-stats-genres {
+
+
+.my-stats-genres,
+.my-stats-minigame-time,
+.my-stats-songs{
     background-color: var(--section-item-background);
     display: flex;
     flex-wrap: wrap;
@@ -182,14 +186,14 @@
     box-shadow: 0 10px 20px var(--hover-shadow);
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.3s ease;
-    max-height: 200px;
-    overflow: hidden;
+    max-height: 600px;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
 }
+
+
 .my-stats-recently-played,
-.my-stats-listening-graph,
 .my-stats-reccomendation{
     display: flex;
     flex-wrap: wrap;
@@ -206,6 +210,8 @@
 .my-stats-artists:hover,
 .my-stats-recently-played:hover,
 .my-stats-genres:hover,
+.my-stats-minigame-time:hover,
+.my-stats-songs:hover,
 .my-stats-listening-graph:hover,
 .my-stats-reccomendation:hover{
     transform: translateY(-10px);
@@ -226,7 +232,8 @@
 }
 
 .my-stats-recently-played,
-.my-stats-genres{
+.my-stats-genres,
+.my-stats-minigame-time{
     grid-column: span 1;
 }
 
@@ -239,6 +246,7 @@
     color: var(--text-color);
     font-size: 1.2em;
 }
+
 
 .my-stats-recently-played{
     background-color: var(--section-item-background);
@@ -323,7 +331,8 @@
     color: var(--text-color);
 }
 
-.genre-card {
+.genre-card,
+.minigame-card{
     background-color: var(--card-background);
     padding: 10px 16px;
     border-radius: 12px;
@@ -338,9 +347,17 @@
     width: 200px;
 }
 
-.genre-name {
+.genre-name,
+.high-score{
     color: var(--text-color);
 }
+
+.genre-and-minigame{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 
 
 
