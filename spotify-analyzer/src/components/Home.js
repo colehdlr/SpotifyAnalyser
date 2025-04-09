@@ -17,6 +17,7 @@ const Home = () => {
     const [recentTracks, setRecentTracks] = useState(null);
     const [recommendations, setRecommendations] = useState([]);
     const [topGenre, setTopGenre] = useState(null);
+    const [topSongs, setTopSongs] = useState(null);
 
 
     const fetchRecentlyPlayed = async () => {
@@ -46,30 +47,14 @@ const Home = () => {
         }
     };
 
-
-
-
-    // check authentication (mounting on to Home component)
-    useEffect(() => {
-        if (!accessToken) {
-            // redirect if not authenticated
-            navigate('/login');
-            return;
+    const fetchTopSongs = async () => {
+        try {
+            const data = await apiService.getTopTracks(timeRange, 5);
+            setTopSongs(data);
+        } catch (err) {
+            console.error("Error fetching top artists:", err);
         }
-        fetchTopArtists();
-        fetchRecentlyPlayed();
-        fetchReccomendations();
-        fetchTopGenre();
-    }, [accessToken, navigate]);
-
-    // whenever the time period changes we need to refresh - this does that with timeRange as a param
-    useEffect(() => {
-        if (accessToken) {
-            fetchTopArtists();
-            fetchRecentlyPlayed();
-            fetchReccomendations();
-        }
-    }, [timeRange]);
+    };
 
     const fetchTopArtists = async () => {
         try {
@@ -96,6 +81,36 @@ const Home = () => {
             setLoading(false);
         }
     };
+
+
+
+
+
+    // check authentication (mounting on to Home component)
+    useEffect(() => {
+        if (!accessToken) {
+            // redirect if not authenticated
+            navigate('/login');
+            return;
+        }
+        fetchTopArtists();
+        fetchRecentlyPlayed();
+        fetchReccomendations();
+        fetchTopGenre();
+        fetchTopSongs();
+    }, [accessToken, navigate]);
+
+    // whenever the time period changes we need to refresh - this does that with timeRange as a param
+    useEffect(() => {
+        if (accessToken) {
+            fetchTopArtists();
+            fetchRecentlyPlayed();
+            fetchReccomendations();
+            fetchTopSongs();
+        }
+    }, [timeRange]);
+
+
 
 
     const handleTimeRangeChange = (e) => {
@@ -196,23 +211,53 @@ const Home = () => {
                             <p>No recommendations found.</p>
                         )}
                     </div>
-                    <div className="my-stats-genres">
-                        <h3>Your Top Genre</h3>
-                        {topGenre ? (
-                            <div className="genre-card">
-                                <span className="genre-name">{topGenre}</span>
+                    <div className="genre-and-minigame">
+                        <div className="my-stats-genres">
+                            <h3>Your Top Genre</h3>
+                            {topGenre ? (
+                                <div className="genre-card">
+                                    <span className="genre-name">{topGenre}</span>
+                                </div>
+                            ) : (
+                                <p>No Genre Found</p>
+                            )}
+                        </div>
+                        <div className="my-stats-minigame-time">
+                            <h3 style={{ marginTop: '20px' }}>Your Minigame High Score</h3>
+                            <div className="minigame-card">
+                                <span className="high-score">97 Seconds</span>
                             </div>
-                        ) : (
-                            <p>No Genre Found</p>
-                        )}
-                    </div>
-                    <div className="my-stats-hour">
-                        <h3>Your Busiest Listening Hour</h3>
+                        </div>
+                        <div className="my-stats-songs">
+                            <h3>Your Top Songs</h3>
+                            {topSongs ? (
+                                <ul className="recent-tracks-list">
+                                    {topSongs.items.map((track) => (
+                                        <li key={track.id} className="recent-track">
+                                            <img
+                                                src={track.album.images[0]?.url}
+                                                alt={track.name}
+                                                className="recent-track-image"
+                                            />
+                                            <div className="recent-track-info">
+                                                <div className="track-name">{track.name}</div>
+                                                <div className="track-artist">{track.artists.map((a) => a.name).join(", ")}</div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No top songs found.</p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </BlurPanel>
         </div>
-    );
+);
 };
+
+
+
 
 export default Home;
