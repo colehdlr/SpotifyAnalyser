@@ -8,5 +8,6 @@ public interface UserService
     public List<User> getRegisteredUsers() throws Exception;
     public List<User> getTopMinigamePlayers() throws Exception;
     public User getUserMinigameTime(String username) throws Exception;
+    public boolean deleteMinigameScore(String username) throws Exception;
 }
 

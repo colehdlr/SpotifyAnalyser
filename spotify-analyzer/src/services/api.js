@@ -529,36 +529,49 @@ export const apiService = {
        }
    },
 
-   // Update user's minigame time
-   updateMinigameTime: async (username, newTime) => {
-       try {
-           const response = await fetch(
-               `${BACKEND_URL}/db/users/updateMinigameTime?username=${encodeURIComponent(username)}&newTime=${newTime}`,
-               {
-                   method: 'PUT',
-                   credentials: 'include'
-               }
-           );
+    updateMinigameTime: async (username, newTime) => {
+        try {
+            const response = await fetch(
+                `${BACKEND_URL}/db/users/updateMinigameTime?username=${encodeURIComponent(username)}&newTime=${newTime}`,
+                {
+                    method: 'PUT',
+                    credentials: 'include'
+                }
+            );
 
-           if (!response.ok) {
-               if (response.status === 400) {
-                   // Handle case where new time isn't better than previous time
-                   throw new Error(`New time isn't better than previous best time`);
-               }
-               throw new Error(`Failed to update minigame time: ${response.status}`);
-           }
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to update minigame time: ${response.status}`);
+            }
 
-           return await response.json();
-       } catch (error) {
-           console.error('Error updating minigame time:', error);
-           throw error;
-       }
-   }
+            return await response.json();
+        } catch (error) {
+            console.error('Error updating minigame time:', error);
+            throw error;
+        }
+    },
 
+    deleteMinigameScore: async (username) => {
+        try {
+            const response = await fetch(
+                `${BACKEND_URL}/db/users/deleteMinigameScore?username=${encodeURIComponent(username)}`,
+                {
+                    method: 'DELETE',
+                    credentials: 'include'
+                }
+            );
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to delete minigame score: ${response.status}`);
+            }
 
-
-
+            return await response.json();
+        } catch (error) {
+            console.error('Error deleting minigame score:', error);
+            throw error;
+        }
+    }
 };
 
 export default apiService;
