@@ -75,6 +75,48 @@ function Artists() {
         try {
             if (artistInfo) {
                 setSummaryLoading(true);
+                const allArtists = await apiService.getAllArtists();
+                // Check if the artist is already in the database
+                const artistExists = allArtists.some(artist => artist.artistName === artistInfo.name);
+                console.log("Artist exists:", artistExists);
+                console.log("All artists:", allArtists);
+                if (!artistExists) {
+                    const summary = await apiService.getArtistSummary(artistInfo.name);
+                    setArtistSummary(summary["artist_summary"]);
+                    setIsSummaryModalOpen(true);
+                    const artist = {
+                        artistName: artistInfo.name,
+                        summary: summary["artist_summary"],
+                        update_date: new Date().toISOString() // Add an update date if required
+                    };
+                    // Add the artist to the database
+                    await apiService.addArtist(artist);
+                    return;
+                }
+                else{
+                    // If the artist is already in the database, fetch the summary from there
+                    const artist = allArtists.find(artist => artist.artistName === artistInfo.name);
+
+                    // check update_time
+                    const currentTime = new Date();
+                    const update_date = new Date(artist.update_date);
+                    const timeDiff = Math.abs(currentTime - update_date);
+                    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                    if (diffDays > 30) {
+                        // If the artist summary is older than 30 days, fetch a new summary
+                        const summary = await apiService.getArtistSummary(artistInfo.name);
+                        setArtistSummary(summary["artist_summary"]);
+                        setIsSummaryModalOpen(true);
+
+                        // Update the artist in the database
+                        await apiService.updateArtistSummary(artist.name, summary["artist_summary"]);
+                        return;
+                    }
+
+                    setArtistSummary(artist.summary);
+                    setIsSummaryModalOpen(true);
+                    return;
+                }
                 const summary = await apiService.getArtistSummary(artistInfo.name);
                 setArtistSummary(summary["artist_summary"]);
                 setIsSummaryModalOpen(true);
