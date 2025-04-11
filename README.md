@@ -33,6 +33,7 @@ To run the project:
                       Windows: ```venv\Scripts\activate```
                       Linux/MacOS: ```source venv/bin/activate```
            - Install dependencies in the venv: ```pip install -r requirements.txt```
+           - Also this, for some reason doesn't get added to requirements.txt: ```pip install torch```
        - Run main.py: ```python main.py```
 
 
