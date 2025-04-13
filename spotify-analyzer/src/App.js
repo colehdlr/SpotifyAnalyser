@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { apiService } from './services/api';
 import { ThemeProvider } from './services/Theme';
 
-import './App.css';
+import './styles/App.css';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import Artists from "./components/Artists";

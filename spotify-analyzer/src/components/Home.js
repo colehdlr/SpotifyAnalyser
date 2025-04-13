@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Theme } from "../services/Theme";
 import BlurPanel from "../services/BlurPanel"
-import '../App.css';
-import '../Home.css';
+import '../styles/App.css';
+import '../styles/Home.css';
 
 const Home = () => {
     const { isDarkMode } = useContext(Theme);

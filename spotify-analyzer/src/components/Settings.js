@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Theme } from '../services/Theme';
 import { apiService } from '../services/api';
-import '../Settings.css';
-import '../App.css';
+import '../styles/Settings.css';
+import '../styles/App.css';
 
 function Settings() {
     const { isDarkMode, toggleTheme } = useContext(Theme);
