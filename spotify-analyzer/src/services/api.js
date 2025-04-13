@@ -1,5 +1,5 @@
 // src/services/api.js
-const BACKEND_URL = 'http://localhost:8080/api';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL + '/api';
 
 const fetchHelper = async (url, options = {}) => {
     try {

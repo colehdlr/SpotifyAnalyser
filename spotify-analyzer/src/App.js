@@ -49,7 +49,7 @@ function App() {
         return (
             <div className="LoadingScreen">
                 <h2>Connection Error</h2>
-                <p>Could not connect to the server. Please make sure the backend service is running at http://localhost:8080</p>
+                <p>Could not connect to the server. Please make sure the backend service is running at {process.env.REACT_APP_BACKEND_URL}</p>
             </div>
         );
     }
