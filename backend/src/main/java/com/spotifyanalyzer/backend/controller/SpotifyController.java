@@ -6,6 +6,7 @@ import com.spotifyanalyzer.backend.authservice.PythonService;
 import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
 import com.spotifyanalyzer.backend.authservice.SpotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,9 @@ public class SpotifyController {
 
     private final SpotifyService spotifyService;
     private final PythonService pythonService;
+
+    @Value("${python.service.url}")
+    private String pythonServiceUrl;
 
     @Autowired
     public SpotifyController(SpotifyService spotifyService) {
@@ -479,7 +483,7 @@ public class SpotifyController {
             String artistDetailJSON = JsonUtil.convertObjectToJson(artistDetails);
             System.out.println("Sending artist summary request to python service" + artistDetailJSON);
 
-            String artistSummary = pythonService.sendPOST(artistDetailJSON);
+            String artistSummary = pythonService.sendPOST(artistDetailJSON, pythonServiceUrl+"/artistSummary");
             System.out.println(artistSummary);
             return ResponseEntity.ok(artistSummary);
         } catch (Exception e) {

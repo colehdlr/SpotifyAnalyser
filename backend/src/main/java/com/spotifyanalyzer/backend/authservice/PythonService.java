@@ -10,10 +10,9 @@ import java.net.URL;
 public class PythonService {
     private static final String USER_AGENT = "Mozilla/5.0";
 
-    public String sendPOST(String jsonInputString) throws IOException {
-
-        //TODO:pass url endpoint as a param in the future to make this more reusable
-        URL obj = new URL("http://127.0.0.1:5000/artistSummary");
+    public String sendPOST(String jsonInputString, String url) throws IOException {
+        System.out.println("Sending POST request to Python service with URL: " + url);
+        URL obj = new URL(url);
 
 
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
