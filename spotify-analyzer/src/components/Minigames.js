@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { fetchTopArtists, searchArtists, fetchTopTracks, searchTracks } from '../services/minigameHandler';
 import { Theme } from '../services/Theme';
 import { apiService } from '../services/api'
-import '../App.css';
+import '../styles/App.css';
 
 function Minigames() {
     const { isDarkMode } = useContext(Theme);

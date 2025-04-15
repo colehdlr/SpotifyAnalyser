@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../BlurredPanel.css';
+import '../styles/BlurredPanel.css';
 
 const BlurPanel = ({ children }) => {
     const navigate = useNavigate();

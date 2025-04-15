@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { apiService } from './services/api';
 import { ThemeProvider } from './services/Theme';
 
-import './App.css';
+import './styles/App.css';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import Artists from "./components/Artists";
@@ -49,7 +49,7 @@ function App() {
         return (
             <div className="LoadingScreen">
                 <h2>Connection Error</h2>
-                <p>Could not connect to the server. Please make sure the backend service is running at http://localhost:8080</p>
+                <p>Could not connect to the server. Please make sure the backend service is running at {process.env.REACT_APP_BACKEND_URL}</p>
             </div>
         );
     }

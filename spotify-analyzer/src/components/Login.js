@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../services/api';
-import '../Home.css';
+import '../styles/Home.css';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
