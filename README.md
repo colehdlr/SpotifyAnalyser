@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Getting started
 
+
+
 ### Setting up the workspace
 Start by opening a terminal in your workspace. 
 
