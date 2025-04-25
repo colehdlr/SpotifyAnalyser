@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://spotifyanalyser.onrender.com" + '/api';
+const BACKEND_URL = "https://spotifyanalyserbackend.onrender.com" + '/api';
 
 const fetchHelper = async (url, options = {}) => {
     try {
