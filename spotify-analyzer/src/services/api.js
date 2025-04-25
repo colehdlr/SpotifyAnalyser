@@ -1,4 +1,4 @@
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL + '/api';
+const BACKEND_URL = "https://spotifyanalyser.onrender.com" + '/api';
 
 const fetchHelper = async (url, options = {}) => {
     try {
