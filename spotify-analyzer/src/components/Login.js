@@ -58,6 +58,7 @@ const Login = () => {
 
                                     if (status.authenticated) {
                                         console.log("authenticated, redirecting to home");
+                                        localStorage.removeItem('gameCompleted');
                                         navigate('/home');
                                     } else {
                                         // even if session check fails, try continuing with the token we have
