@@ -15,20 +15,15 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // csrf off for security
-                .csrf(csrf -> csrf.disable())
-
-                .authorizeHttpRequests(authorize ->
-                        authorize.anyRequest().permitAll()
-                )
-
-               // disable basic http auth as we have our own
-                .httpBasic(httpBasic -> httpBasic.disable())
-
-                .formLogin(formLogin -> formLogin.disable());
+            .cors(cors -> {})
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .formLogin(formLogin -> formLogin.disable());
 
         return http.build();
     }
+
     @Configuration
     public class SecurityConfig {
 
