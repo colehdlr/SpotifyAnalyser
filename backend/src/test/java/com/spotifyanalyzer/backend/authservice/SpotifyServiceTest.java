@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SpotifyServiceTest {
-
+    //
     @Mock
     private SpotifyConfig spotifyConfig;
 
