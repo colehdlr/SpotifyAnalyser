@@ -26,8 +26,9 @@ jobs:
       - name: Build React App Docker Image
         working-directory: spotify-analyzer
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest .
+          docker build --build-arg REACT_APP_ENV=production -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest .
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
+
           
       - name: Deploy Frontend to VM
         env:
