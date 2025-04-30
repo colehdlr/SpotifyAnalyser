@@ -1,0 +1,53 @@
+name: Deploy to GCE on PR Merge
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [closed]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.GCE_SSH_KEY }}
+
+      # ----- FRONTEND -----
+      - name: Build React App
+        working-directory: spotify-analyzer
+        run: |
+          npm install
+          npm run build
+
+      - name: Upload React Build to VM
+        run: |
+          scp -o StrictHostKeyChecking=no -r spotify-analyzer/build/* cole_hodler@35.246.70.11:/home/cole_hodler/react-app
+
+      # ----- BACKEND -----
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Build Spring Boot App
+        working-directory: backend
+        run: mvn clean install -DskipTests
+
+      - name: Upload Spring Boot JAR to VM
+        run: |
+          scp -o StrictHostKeyChecking=no backend/target/*.jar cole_hodler@35.246.70.11:/home/cole_hodler/spring-app/app.jar
+
+      - name: Restart Spring Boot App
+        run: |
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 << 'EOF'
+            pkill -f 'java -jar' || true
+            nohup java -jar /home/cole_hodler/spring-app/app.jar > /home/cole_hodler/spring.log 2>&1 &
+          EOF
