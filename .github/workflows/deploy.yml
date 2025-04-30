@@ -19,7 +19,7 @@ jobs:
         run: |
           echo '${{ secrets.ARTIFACT_REGISTRY_WRITER_CREDENTIALS }}' > /tmp/gcloud-key.json
           gcloud auth activate-service-account --key-file=/tmp/gcloud-key.json
-          echo "PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" >> $GITHUB_ENV
+          echo "GCP_PROJECT=${{ secrets.GCP_PROJECT_ID }}" >> $GITHUB_ENV
           echo "y" | gcloud auth configure-docker
           
       # ----- FRONTEND -----
@@ -29,16 +29,15 @@ jobs:
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest .
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
           
-      - name: Upload React Docker Image to VM
+      - name: Deploy Frontend to VM
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 "
-            docker pull gcr.io/${GCP_PROJECT}/frontend:latest
-            docker stop react-app || true
-            docker rm react-app || true
-            docker run -d --name react-app -p 80:80 gcr.io/${GCP_PROJECT}/frontend:latest
-          "
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 \
+            "docker pull gcr.io/${GCP_PROJECT}/frontend:latest && \
+             docker stop react-app || true && \
+             docker rm react-app || true && \
+             docker run -d --name react-app -p 80:80 gcr.io/${GCP_PROJECT}/frontend:latest"
           
       # ----- BACKEND -----
       - name: Build Spring Boot App Docker Image
@@ -47,13 +46,12 @@ jobs:
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:latest .
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:latest
           
-      - name: Upload Spring Boot Docker Image to VM
+      - name: Deploy Backend to VM
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 "
-            docker pull gcr.io/${GCP_PROJECT}/backend:latest
-            docker stop spring-app || true
-            docker rm spring-app || true
-            docker run -d --name spring-app -p 8080:8080 gcr.io/${GCP_PROJECT}/backend:latest
-          "
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 \
+            "docker pull gcr.io/${GCP_PROJECT}/backend:latest && \
+             docker stop spring-app || true && \
+             docker rm spring-app || true && \
+             docker run -d --name spring-app -p 8080:8080 gcr.io/${GCP_PROJECT}/backend:latest"
