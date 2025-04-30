@@ -52,4 +52,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 \
             "docker pull gcr.io/${GCP_PROJECT}/backend:latest && \
              docker ps -a | grep -q spring-app && docker stop spring-app && docker rm spring-app; \
-             docker run -d --name spring-app -p 8080:8080 gcr.io/${GCP_PROJECT}/backend:latest"
+             docker run -d --name spring-app \
+               -p 8080:8080 \
+               -e SPOTIFY_REDIRECT_URI=http://35.246.70.11/callback \
+               -e CORS_ALLOWED_ORIGINS=http://35.246.70.11 \
+               -e BACKEND_URL=http://35.246.70.11 \
+               gcr.io/${GCP_PROJECT}/backend:latest"
