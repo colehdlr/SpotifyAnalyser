@@ -43,14 +43,11 @@ public class SpotifyService {
         System.out.println("client ID: " + spotifyConfig.getClientId());
         System.out.println("redirect URI: " + spotifyConfig.getRedirectUri());
 
-        // set our redirect to the frontend callback (THIS MUST BE THE SAME AS WHATEVER IS IN SPOTIFY DASHBOARD!!!)
-        String redirectUri = "http://localhost:3000/callback";
-
         String authUrl = String.format(
                 "https://accounts.spotify.com/authorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s",
                 spotifyConfig.getClientId(),
                 scopeParam,
-                redirectUri,
+                spotifyConfig.getRedirectUri(),
                 state
         );
 
@@ -62,16 +59,13 @@ public class SpotifyService {
         HttpHeaders headers = createBasicAuthHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        // IMPORTANT: MUST BE THE SAME REDIRECT AS IN getAuthorisationURL!!
-        String redirectUri = "http://localhost:3000/callback";
-
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("code", code);
-        body.add("redirect_uri", redirectUri);
+        body.add("redirect_uri", spotifyConfig.getRedirectUri());
 
-        System.out.println("exchange code request - grant_type: authorization_code, redirect_uri: " + redirectUri);
-
+        System.out.println("exchange code request - grant_type: authorization_code, redirect_uri: " + spotifyConfig.getRedirectUri());
+        
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
         try {
