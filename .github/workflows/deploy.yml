@@ -34,11 +34,11 @@ jobs:
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 \
-            "docker pull gcr.io/${GCP_PROJECT}/frontend:latest && \
-             docker ps -a | grep -q react-app && docker stop react-app && docker rm react-app; \
-             docker run -d --name react-app -p 3000:80 gcr.io/${GCP_PROJECT}/frontend:latest"
-          
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 '
+            docker pull gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest &&
+            docker ps -a | grep -q react-app && docker stop react-app && docker rm react-app;
+            docker run -d --name react-app -p 3000:80 gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
+          '          
       # ----- BACKEND -----
       - name: Build Spring Boot App Docker Image
         working-directory: backend
