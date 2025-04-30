@@ -1,0 +1,50 @@
+name: Deploy to GCE on PR Merge
+
+on:
+  push:
+    branches: [ production-demo ]
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.GCE_SSH_KEY }}
+
+      # ----- FRONTEND -----
+      - name: Build React App Docker Image
+        working-directory: spotify-analyzer
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
+
+      - name: Upload React Docker Image to VM
+        run: |
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 << 'EOF'
+            docker pull gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
+            docker stop react-app || true
+            docker rm react-app || true
+            docker run -d --name react-app -p 80:80 gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
+          EOF
+
+      # ----- BACKEND -----
+      - name: Build Spring Boot App Docker Image
+        working-directory: backend
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:latest
+
+      - name: Upload Spring Boot Docker Image to VM
+        run: |
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 << 'EOF'
+            docker pull gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:latest
+            docker stop spring-app || true
+            docker rm spring-app || true
+            docker run -d --name spring-app -p 8080:8080 gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend:latest
+          EOF
