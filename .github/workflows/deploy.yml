@@ -35,9 +35,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 \
             "docker pull gcr.io/${GCP_PROJECT}/frontend:latest && \
-             docker stop react-app || true && \
-             docker rm react-app || true && \
-             docker run -d --name react-app -p 80:80 gcr.io/${GCP_PROJECT}/frontend:latest"
+             docker ps -a | grep -q react-app && docker stop react-app && docker rm react-app; \
+             docker run -d --name react-app -p 3000:80 gcr.io/${GCP_PROJECT}/frontend:latest"
           
       # ----- BACKEND -----
       - name: Build Spring Boot App Docker Image
@@ -52,6 +51,5 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no cole_hodler@35.246.70.11 \
             "docker pull gcr.io/${GCP_PROJECT}/backend:latest && \
-             docker stop spring-app || true && \
-             docker rm spring-app || true && \
+             docker ps -a | grep -q spring-app && docker stop spring-app && docker rm spring-app; \
              docker run -d --name spring-app -p 8080:8080 gcr.io/${GCP_PROJECT}/backend:latest"
