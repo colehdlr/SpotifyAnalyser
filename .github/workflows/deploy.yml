@@ -17,6 +17,14 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.GCE_SSH_KEY }}
 
+      # ----- GOOGLE CLOUD AUTHENTICATION -----
+      - name: Authenticate to Google Cloud
+        run: |
+          echo "${{ secrets.ARTIFACT_REGISTRY_WRITER_CREDENTIALS }}" > /tmp/gcloud-key.json
+          gcloud auth activate-service-account --key-file=/tmp/gcloud-key.json
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          gcloud auth configure-docker
+
       # ----- FRONTEND -----
       - name: Build React App Docker Image
         working-directory: spotify-analyzer
