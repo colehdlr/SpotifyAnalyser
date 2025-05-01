@@ -59,3 +59,22 @@ jobs:
                -e CORS_ALLOWED_ORIGINS=http://35.246.70.11 \
                -e BACKEND_URL=http://35.246.70.11 \
                gcr.io/${GCP_PROJECT}/backend:latest"
+
+      # ----- PYTHON MICROSERVICE -----
+      - name: Build Python Microservice Docker Image
+        working-directory: py-microservice
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/python-microservice:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/python-microservice:latest
+          
+      - name: Deploy Python Microservice to VM
+        env:
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          ssh -o StrictHostKeyChecking=no ***********@35.246.70.11 \
+            "docker pull gcr.io/${GCP_PROJECT}/python-microservice:latest && \
+             docker ps -a | grep -q python-app && docker stop python-app && docker rm python-app; \
+             docker run -d --name python-app \
+               -p 5000:5000 \
+               --restart unless-stopped \
+               gcr.io/${GCP_PROJECT}/python-microservice:latest"
