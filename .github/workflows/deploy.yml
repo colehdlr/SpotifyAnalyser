@@ -58,9 +58,10 @@ jobs:
                -e SPOTIFY_REDIRECT_URI=http://35.246.70.11/callback \
                -e CORS_ALLOWED_ORIGINS=http://35.246.70.11 \
                -e BACKEND_URL=http://35.246.70.11 \
+               -e python.service.url=http://35.246.70.11:5000 \
                gcr.io/${GCP_PROJECT}/backend:latest"
 
-            # ----- PYTHON MICROSERVICE -----
+      # ----- PYTHON MICROSERVICE -----
       - name: Build Python Microservice Docker Image
         working-directory: py-microservice
         run: |
