@@ -46,12 +46,12 @@ public class SpotifyServiceTest {
     @Test
     void testGetAuthorisationUrl() {
         String authUrl = spotifyService.getAuthorisationUrl();
+        System.out.println("Generated Auth URL: " + authUrl);
 
         assertTrue(authUrl.startsWith("https://accounts.spotify.com/authorize?response_type=code"));
         assertTrue(authUrl.contains("client_id=test-client-id"));
-
-        // http://34.147.242.86:3000/callback -> http%3A%2F%2F34.147.242.86%3A3000%2Fcallback
-        assertTrue(authUrl.contains("redirect_uri=http%3A%2F%2F34.147.242.86%3A3000%2Fcallback"));
+        assertTrue(authUrl.contains("redirect_uri=http://localhost:3000/callback"));
+        assertTrue(authUrl.contains("redirect_uri=http://34.147.242.86:3000/callback"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SpotifyServiceTest {
                 any(HttpMethod.class),
                 any(HttpEntity.class),
                 eq(SpotifyAuthResponse.class)
-        )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+        )).thenThrow(new SpotifyAuthException);
 
         assertThrows(
                 SpotifyAuthException.class,
@@ -124,10 +124,12 @@ public class SpotifyServiceTest {
                 eq(SpotifyAuthResponse.class)
         )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
-        assertThrows(
+        SpotifyAuthException exception = assertThrows(
                 SpotifyAuthException.class,
                 () -> spotifyService.refreshAccessToken(refreshToken)
         );
+
+        assertTrue(exception.getMessage().contains("failed to refresh access token"));
     }
 
     @Test
@@ -162,10 +164,12 @@ public class SpotifyServiceTest {
                 eq(Map.class)
         )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
-        assertThrows(
+        SpotifyAuthException exception = assertThrows(
                 SpotifyAuthException.class,
-                () -> spotifyService.getUserProfile(accessToken)
+                () -> spotifyService.getUserProfile(refreshToken)
         );
+
+        assertTrue(exception.getMessage().contains("failed to get user profile"));
     }
 
     @Test
