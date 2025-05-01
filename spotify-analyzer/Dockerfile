@@ -1,20 +1,31 @@
-FROM node:18-alpine
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Copy package files
+ 
+# Copy package.json and package-lock.json (if they exist)
 COPY package*.json ./
+ 
+# Install dependencies
 RUN npm install
-
-# Copy all files
+ 
+# Copy the rest of the app and the .env file
 COPY . .
-
-# Build the app
+ 
+# Build the React app (this will use the .env for build-time variables)
 RUN npm run build
-
-# Install serve
+ 
+# Stage 2: Serve the app using `serve`
+FROM node:18-alpine
+ 
+WORKDIR /app
+ 
+# Install `serve` globally
 RUN npm install -g serve
-
-EXPOSE 3000
+ 
+# Copy the build output from the previous stage
+COPY --from=build /app/build /app/build
+ 
+# Expose port 80
 EXPOSE 80
-# Use serve with the correct options
+ 
+# Start serving the app
 CMD ["serve", "-s", "build", "-l", "tcp://0.0.0.0:80"]
