@@ -5,39 +5,74 @@ from transformers import BartTokenizer, BartForConditionalGeneration
 tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
 model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
 
-def get_genius_data(artist_name):
+def get_wiki_url(artist_name):
+    # replace spaces with underscores and URL encode the name
+    formatted_name = quote(artist_name.replace(' ', '_'))
+    return f"https://en.wikipedia.org/wiki/{formatted_name}"
 
-        formatted_name = artist_name.replace(' ', '-')
-        url = "https://genius.com/artists/"+formatted_name
+def scrape_artist_info(artist_name):
+    # generate the Wikipedia URL
+    artist_url = get_wiki_url(artist_name)
+    print(f"Retrieving data from: {artist_url}")
 
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        }
+    # request page
+    response = requests.get(artist_url)
+    if response.status_code != 200:
+        print(f"Failed to retrieve page: Status code {response.status_code}")
+        return ""
 
-        # Send HTTP request
-        response = requests.get(url, headers=headers)
+    # parse HTML content
+    soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Check if request was successful
-        if response.status_code != 200:
-            return False
+    # find the infobox - try different possible infobox classes
+    infobox = None
+    possible_infobox_classes = [
+        {'class_': 'infobox biography vcard'},
+        {'class_': 'infobox vcard'},
+        {'class_': 'infobox'},
+        {'class_': 'wikitable'}
+    ]
 
-        soup = BeautifulSoup(response.text, 'html.parser')
+    for class_dict in possible_infobox_classes:
+        infobox = soup.find('table', **class_dict)
+        if infobox:
+            break
 
-        # Find the artist bio section
-        summary = soup.find("div", class_="rich_text_formatting")
-        print("Summary found:", summary)
-        if summary:
-            return summary.text.strip()
-        else:
-            return False
+        if not infobox:
+            # If no table-based infobox is found, try to start from the first paragraph
+            first_p = soup.find('div', {'class': 'mw-parser-output'}).find('p', recursive=False)
+            if first_p:
+                infobox = first_p.find_previous()
+            else:
+                print("No artist infobox or initial paragraph found on this page.")
+                return ""
+
+        # get all paragraphs after the infobox until the next heading
+        content = []
+        current_element = infobox.find_next('p')
+
+        while current_element and not current_element.name.startswith('h'):
+            if current_element.name == 'p' and current_element.text.strip():
+                content.append(current_element.text.strip())
+            current_element = current_element.find_next()
+
+        info_text = '\n\n'.join(content)
+
+        # clean up text - remove citation brackets [1], [2]
+        info_text = re.sub(r'\[\d+\]', '', info_text)
+
+        if not info_text:
+            print("No relevant information found after the infobox.")
+            return ""
+
+        return info_text
 
 def summarize_artist(artist_name):
-    web_scraped_data = get_genius_data(artist_name)
-    if not web_scraped_data:
+    web_scraped_data = scrape_artist_info(artist_name)
+    if len(web_scraped_data) ==  0:
         return "No summary available."
     artist_summary = generate_summary(web_scraped_data)
     return artist_summary
-
 
 def generate_summary(text):
     inputs = tokenizer.encode("summarize " + text, return_tensors="pt", max_length=1024)
