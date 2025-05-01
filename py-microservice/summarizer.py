@@ -5,6 +5,7 @@ from urllib.parse import quote
 from transformers import BartTokenizer, BartForConditionalGeneration
 tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
 model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+
 def get_wiki_url(artist_name):
     """
     Converts artist name to a Wikipedia URL.
@@ -59,11 +60,16 @@ def scrape_artist_info(artist_name):
    
     if not infobox:
         # If no table-based infobox is found, try to start from the first paragraph
-        first_p = soup.find('div', {'class': 'mw-parser-output'}).find('p', recursive=False)
-        if first_p:
-            infobox = first_p.find_previous()
+        parser_output = soup.find('div', {'class': 'mw-parser-output'})
+        if parser_output:
+            first_p = parser_output.find('p', recursive=False)
+            if first_p:
+                infobox = first_p.find_previous()
+            else:
+                print("No artist infobox or initial paragraph found on this page.")
+                return ""
         else:
-            print("No artist infobox or initial paragraph found on this page.")
+            print("Could not find main content area.")
             return ""
    
     # get all paragraphs after the infobox until the next heading
