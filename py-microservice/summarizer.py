@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+import re
+from urllib.parse import quote
 from transformers import BartTokenizer, BartForConditionalGeneration
-
 tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
 model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
 
@@ -38,34 +39,39 @@ def scrape_artist_info(artist_name):
         if infobox:
             break
 
-        if not infobox:
-            # If no table-based infobox is found, try to start from the first paragraph
-            first_p = soup.find('div', {'class': 'mw-parser-output'}).find('p', recursive=False)
+    if not infobox:
+        # If no table-based infobox is found, try to start from the first paragraph
+        parser_output = soup.find('div', {'class': 'mw-parser-output'})
+        if parser_output:
+            first_p = parser_output.find('p', recursive=False)
             if first_p:
                 infobox = first_p.find_previous()
             else:
                 print("No artist infobox or initial paragraph found on this page.")
                 return ""
-
-        # get all paragraphs after the infobox until the next heading
-        content = []
-        current_element = infobox.find_next('p')
-
-        while current_element and not current_element.name.startswith('h'):
-            if current_element.name == 'p' and current_element.text.strip():
-                content.append(current_element.text.strip())
-            current_element = current_element.find_next()
-
-        info_text = '\n\n'.join(content)
-
-        # clean up text - remove citation brackets [1], [2]
-        info_text = re.sub(r'\[\d+\]', '', info_text)
-
-        if not info_text:
-            print("No relevant information found after the infobox.")
+        else:
+            print("Could not find main content area.")
             return ""
 
-        return info_text
+    # get all paragraphs after the infobox until the next heading
+    content = []
+    current_element = infobox.find_next('p')
+
+    while current_element and not current_element.name.startswith('h'):
+        if current_element.name == 'p' and current_element.text.strip():
+            content.append(current_element.text.strip())
+        current_element = current_element.find_next()
+
+    info_text = '\n\n'.join(content)
+
+    # clean up text - remove citation brackets [1], [2]
+    info_text = re.sub(r'\[\d+\]', '', info_text)
+
+    if not info_text:
+        print("No relevant information found after the infobox.")
+        return ""
+
+    return info_text
 
 def summarize_artist(artist_name):
     web_scraped_data = scrape_artist_info(artist_name)
