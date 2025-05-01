@@ -44,7 +44,7 @@ public class SpotifyService {
         System.out.println("redirect URI: " + spotifyConfig.getRedirectUri());
 
         // set our redirect to the frontend callback (THIS MUST BE THE SAME AS WHATEVER IS IN SPOTIFY DASHBOARD!!!)
-        String redirectUri = "http://localhost:3000/callback";
+        String redirectUri = "http://34.147.242.86:3000/callback";
 
         String authUrl = String.format(
                 "https://accounts.spotify.com/authorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s",
@@ -63,7 +63,7 @@ public class SpotifyService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         // IMPORTANT: MUST BE THE SAME REDIRECT AS IN getAuthorisationURL!!
-        String redirectUri = "http://localhost:3000/callback";
+        String redirectUri = "http://34.147.242.86:3000/callback";
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
