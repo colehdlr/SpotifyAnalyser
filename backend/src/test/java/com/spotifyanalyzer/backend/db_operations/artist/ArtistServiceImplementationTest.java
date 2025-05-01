@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -91,7 +93,6 @@ public class ArtistServiceImplementationTest {
 
     @Test
     void testFetchArtistSummary_ArtistInDatabaseAndUpToDate() throws JsonProcessingException {
-
         ArtistServiceImplementation spy = spy(artistService);
 
         Artist existingArtist = new Artist();
@@ -119,22 +120,24 @@ public class ArtistServiceImplementationTest {
 
     @Test
     void testGetSummaryFromMicroservice() throws Exception {
-
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
 
         TestableArtistService testService = new TestableArtistService(mockRestTemplate);
         ReflectionTestUtils.setField(testService, "backendUrl", BACKEND_URL);
         ReflectionTestUtils.setField(testService, "artistRepository", artistRepository);
 
-        // Create mock response
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.put("artist_summary", SUMMARY);
         String jsonResponse = mapper.writeValueAsString(rootNode);
 
         ResponseEntity<String> responseEntity = new ResponseEntity<>(jsonResponse, HttpStatus.OK);
-        when(mockRestTemplate.getForEntity(contains("/api/spotify/data/artist-summary"), eq(String.class)))
-                .thenReturn(responseEntity);
+
+        when(mockRestTemplate.postForEntity(
+                anyString(),  // environment agnostic
+                any(),
+                eq(String.class)
+        )).thenReturn(responseEntity);
 
         String result = testService.getSummaryFromMicroservice(ARTIST_NAME);
 
@@ -144,7 +147,6 @@ public class ArtistServiceImplementationTest {
 
     @Test
     void testGetSummaryFromMicroservice_NonSuccessResponse() throws Exception {
-
         RestTemplate mockRestTemplate = mock(RestTemplate.class);
 
         TestableArtistService testService = new TestableArtistService(mockRestTemplate);
@@ -153,13 +155,52 @@ public class ArtistServiceImplementationTest {
 
         // Mock non-success REST response
         ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        when(mockRestTemplate.getForEntity(anyString(), eq(String.class)))
-                .thenReturn(responseEntity);
+
+        when(mockRestTemplate.postForEntity(
+                anyString(),
+                any(),
+                eq(String.class)
+        )).thenReturn(responseEntity);
 
         // Test the method directly
         String result = testService.getSummaryFromMicroservice(ARTIST_NAME);
 
         // Verify
         assertEquals("No summary found", result);
+    }
+
+    @Test
+    void testGetSummaryFromMicroservice_Exception() throws Exception {
+        RestTemplate mockRestTemplate = mock(RestTemplate.class);
+
+        TestableArtistService testService = new TestableArtistService(mockRestTemplate);
+        ReflectionTestUtils.setField(testService, "backendUrl", BACKEND_URL);
+        ReflectionTestUtils.setField(testService, "artistRepository", artistRepository);
+
+        // Mock an exception being thrown
+        when(mockRestTemplate.postForEntity(
+                anyString(),
+                any(),
+                eq(String.class)
+        )).thenThrow(new RuntimeException("Connection error"));
+
+        // Test the method directly
+        String result = testService.getSummaryFromMicroservice(ARTIST_NAME);
+
+        // Verify
+        assertEquals("Error getting summary", result);
+    }
+
+    private class TestableArtistService extends ArtistServiceImplementation {
+        private final RestTemplate restTemplate;
+
+        public TestableArtistService(RestTemplate restTemplate) {
+            this.restTemplate = restTemplate;
+        }
+
+        @Override
+        protected RestTemplate createRestTemplate() {
+            return restTemplate;
+        }
     }
 }

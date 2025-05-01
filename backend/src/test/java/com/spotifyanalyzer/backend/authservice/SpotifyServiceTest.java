@@ -1,6 +1,6 @@
 package com.spotifyanalyzer.backend.authservice;
 
-import com.spotifyanalyzer.backend.authservice.SpotifyService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotifyanalyzer.backend.config.SpotifyConfig;
 import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
 import com.spotifyanalyzer.backend.exceptions.SpotifyAuthException;
@@ -28,12 +28,14 @@ public class SpotifyServiceTest {
     @Mock
     private RestTemplate restTemplate;
 
+    @Mock
+    private ObjectMapper objectMapper;
+
     private SpotifyService spotifyService;
 
     @BeforeEach
     void setUp() {
-        // can get away with just passing objectMapper to the constructor and then not mocking it
-        spotifyService = new SpotifyService(spotifyConfig, restTemplate, null);
+        spotifyService = new SpotifyService(spotifyConfig, restTemplate, objectMapper);
 
         // prevents the "unnecessary stubbing" errors when running mvn test
         lenient().when(spotifyConfig.getClientId()).thenReturn("test-client-id");
@@ -47,7 +49,9 @@ public class SpotifyServiceTest {
 
         assertTrue(authUrl.startsWith("https://accounts.spotify.com/authorize?response_type=code"));
         assertTrue(authUrl.contains("client_id=test-client-id"));
-        assertTrue(authUrl.contains("redirect_uri=http://localhost:3000/callback"));
+
+        // http://34.147.242.86:3000/callback -> http%3A%2F%2F34.147.242.86%3A3000%2Fcallback
+        assertTrue(authUrl.contains("redirect_uri=http%3A%2F%2F34.147.242.86%3A3000%2Fcallback"));
     }
 
     @Test
@@ -115,18 +119,15 @@ public class SpotifyServiceTest {
 
         when(restTemplate.exchange(
                 anyString(),
-                eq(HttpMethod.POST),
+                any(HttpMethod.class),
                 any(HttpEntity.class),
                 eq(SpotifyAuthResponse.class)
         )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
-        // we don't use try/catch in the real implementation so we can just propagate here
-        Exception exception = assertThrows(
-                HttpClientErrorException.class,
+        assertThrows(
+                SpotifyAuthException.class,
                 () -> spotifyService.refreshAccessToken(refreshToken)
         );
-
-        assertTrue(exception.getMessage().contains("400 BAD_REQUEST"));
     }
 
     @Test
@@ -156,19 +157,15 @@ public class SpotifyServiceTest {
 
         when(restTemplate.exchange(
                 anyString(),
-                eq(HttpMethod.GET),
+                any(HttpMethod.class),
                 any(HttpEntity.class),
                 eq(Map.class)
         )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
-        // In the actual implementation, no try-catch block exists,
-        // so the HttpClientErrorException will propagate as is
-        Exception exception = assertThrows(
-                HttpClientErrorException.class,
+        assertThrows(
+                SpotifyAuthException.class,
                 () -> spotifyService.getUserProfile(accessToken)
         );
-
-        assertTrue(exception.getMessage().contains("400 BAD_REQUEST"));
     }
 
     @Test

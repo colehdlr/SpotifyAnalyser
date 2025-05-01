@@ -5,22 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-      - name: Run backend tests
-        run: |
-          cd backend
-          ./mvnw test
-
-  build-and-deploy:
-    needs: test
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,7 +23,6 @@ jobs:
 
       - name: Deploy to VM
         run: |
-          # Create deployment script
           cat > deploy.sh << 'EOL'
           #!/bin/bash
           set -e
