@@ -45,7 +45,7 @@ class test_summarizer(unittest.TestCase):
         self.assertEqual(result, expected_result)
         mock_get.assert_called_once()
 
-    @patch('artist_scraper.requests.get')
+    @patch('summarizer.requests.get')
     def test_scrape_artist_info_no_infobox(self, mock_get):
         # mock response with no infobox
         mock_response = MagicMock()
@@ -56,7 +56,7 @@ class test_summarizer(unittest.TestCase):
         result = scrape_artist_info("Unknown Artist")
         self.assertEqual(result, "")
 
-    @patch('artist_scraper.requests.get')
+    @patch('summarizer.requests.get')
     def test_scrape_artist_info_http_error(self, mock_get):
         # Mock an HTTP error
         mock_response = MagicMock()
