@@ -115,7 +115,7 @@ describe('Artists Component', () => {
         const searchButtons = await screen.findAllByRole('button', {name: /Search/i});
         fireEvent.click(searchButtons[0]);
         const infoButtons = await screen.findAllByText(/Get Artist Info/i);
-        fireEvent.click(infoButtons[0]); // click to open the modal
+        fireEvent.click(infoButtons[0]);
 
         await waitFor(() => {
             expect(screen.getByText(/Popularity/i)).toBeInTheDocument();

@@ -141,11 +141,9 @@ describe('Home Component', () => {
 
     it('displays top 4 artists', async () => {
         await renderHome();
-
-        // Wait until the artist grid is rendered
         const artistCards = await screen.findAllByRole('img', { name: /mock artist/i });
 
-        // Assert that exactly 4 artist cards are shown
+        // check it has 4
         expect(artistCards).toHaveLength(4);
     });
 
@@ -154,14 +152,13 @@ describe('Home Component', () => {
 
         await waitFor(() => {
             const blurredPanel = document.querySelector('.blurred-panel-container .blurred');
-            expect(blurredPanel).toBeTruthy(); // expect inside waitFor!
+            expect(blurredPanel).toBeTruthy();
         });
     });
 
     it('displays top 5 songs', async () => {
         await renderHome();
 
-        // We’ll match based on the track images
         const songImages = await screen.findAllByAltText(/mock track/i);
         expect(songImages).toHaveLength(5);
     });
