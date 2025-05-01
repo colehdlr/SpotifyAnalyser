@@ -25,7 +25,7 @@ jobs:
       # ----- CLEANUP DOCKER CONTAINERS -----
       - name: Cleanup Before Deployments
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.242.176.107 '
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.214.61.213 '
             docker stop $(docker ps -a -q) || true;
             docker rm $(docker ps -a -q) || true;
             docker system prune -af --volumes;
@@ -44,7 +44,7 @@ jobs:
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.242.176.107 '
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.214.61.213 '
             docker pull gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest &&
             docker ps -a | grep -q react-app && docker stop react-app && docker rm react-app;
             docker run -d --name react-app --restart unless-stopped -p 3000:80 gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:latest
@@ -61,15 +61,15 @@ jobs:
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.242.176.107 \
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.214.61.213 \
             "docker pull gcr.io/${GCP_PROJECT}/backend:latest && \
              docker ps -a | grep -q spring-app && docker stop spring-app && docker rm spring-app; \
              docker run -d --name spring-app \
                -p 8080:8080 \
-               -e SPOTIFY_REDIRECT_URI=http://35.242.176.107/callback \
-               -e CORS_ALLOWED_ORIGINS=http://35.242.176.107 \
-               -e BACKEND_URL=http://35.242.176.107 \
-               -e python.service.url=http://35.242.176.107:5000 \
+               -e SPOTIFY_REDIRECT_URI=http://35.214.61.213/callback \
+               -e CORS_ALLOWED_ORIGINS=http://35.214.61.213 \
+               -e BACKEND_URL=http://35.214.61.213 \
+               -e python.service.url=http://35.214.61.213:5000 \
                gcr.io/${GCP_PROJECT}/backend:latest"
 
       # ----- PYTHON MICROSERVICE -----
@@ -83,7 +83,7 @@ jobs:
         env:
           GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          ssh -o StrictHostKeyChecking=no cole_hodler@35.242.176.107 '
+          ssh -o StrictHostKeyChecking=no cole_hodler@35.214.61.213 '
             docker pull gcr.io/${{ secrets.GCP_PROJECT_ID }}/python-microservice:latest &&
             docker ps -a | grep -q python-app && docker stop python-app && docker rm python-app;
             docker run -d --name python-app --restart unless-stopped -p 5000:5000 gcr.io/${{ secrets.GCP_PROJECT_ID }}/python-microservice:latest
