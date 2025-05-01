@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ArtistServiceImplementation implements ArtistService
@@ -47,7 +49,7 @@ public class ArtistServiceImplementation implements ArtistService
     }
 
     private void updateSummaryAndDate(String artistName, Artist artist, Date currentDate) throws JsonProcessingException {
-        String newSummary = getSummaryFromMicroservice(artistName);
+    String newSummary = getSummaryFromMicroservice(artistName);
         artist.setSummary(newSummary);
         artist.setUpdate_date(currentDate);
         artistRepository.save(artist);
@@ -55,25 +57,35 @@ public class ArtistServiceImplementation implements ArtistService
 
     // Package-private for testing
     String getSummaryFromMicroservice(String artistName) throws JsonProcessingException {
-        String encodedArtistName = URLEncoder.encode(artistName, StandardCharsets.UTF_8);
-        // Construct the URL for the microservice
-        String baseUrl = backendUrl + "/api/spotify/data/artist-summary";
-        String url = baseUrl + "?artistName=" + encodedArtistName;
+        // Use microservice Docker service name instead of localhost
+        String url = "http://microservice:5000/artistSummary";
 
         RestTemplate restTemplate = createRestTemplate();
         System.out.println("Requesting summary from: " + url);
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-        if (response.getStatusCode().is2xxSuccessful())
-        {
-            // Parse the JSON response to extract the summary
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(response.getBody());
-            return rootNode.get("artist_summary").asText();
-        }
-        else
-        {
-            return "No summary found";
+        // Create request body with artist name
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("artistName", artistName);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestBody, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful())
+            {
+                // Parse the JSON response to extract the summary
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(response.getBody());
+                return rootNode.get("artist_summary").asText();
+            }
+            else
+            {
+                System.out.println("Microservice returned status: " + response.getStatusCode());
+                return "No summary found";
+            }
+        } catch (Exception e) {
+            System.out.println("Error calling microservice: " + e.getMessage());
+            e.printStackTrace();
+            return "Error getting summary";
         }
     }
 
