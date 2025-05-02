@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -27,6 +28,9 @@ public class SpotifyServiceTest {
 
     @Mock
     private RestTemplate restTemplate;
+
+    @Value("${page.address}")
+    private String pageAddress;
 
     private SpotifyService spotifyService;
 
@@ -48,7 +52,7 @@ public class SpotifyServiceTest {
 
         assertTrue(authUrl.startsWith("https://accounts.spotify.com/authorize?response_type=code"));
         assertTrue(authUrl.contains("client_id=test-client-id"));
-        assertTrue(authUrl.contains("redirect_uri=http://34.147.242.86:3000/callback"));
+        assertTrue(authUrl.contains("redirect_uri="+pageAddress+"/callback"));
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.spotifyanalyzer.backend.config.SpotifyConfig;
 import com.spotifyanalyzer.backend.dto.SpotifyAuthResponse;
 import com.spotifyanalyzer.backend.exceptions.SpotifyAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,6 +20,9 @@ public class SpotifyService {
 
     private final SpotifyConfig spotifyConfig;
     private final RestTemplate restTemplate;
+
+    @Value("${page.address}")
+    private String pageAddress;
 
     @Autowired
     public SpotifyService(SpotifyConfig spotifyConfig, RestTemplate restTemplate, ObjectMapper objectMapper) {
@@ -44,7 +48,7 @@ public class SpotifyService {
         System.out.println("redirect URI: " + spotifyConfig.getRedirectUri());
 
         // set our redirect to the frontend callback (THIS MUST BE THE SAME AS WHATEVER IS IN SPOTIFY DASHBOARD!!!)
-        String redirectUri = "http://34.147.242.86:3000/callback";
+        String redirectUri = pageAddress+"/callback";
 
         String authUrl = String.format(
                 "https://accounts.spotify.com/authorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s",
@@ -63,7 +67,7 @@ public class SpotifyService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         // IMPORTANT: MUST BE THE SAME REDIRECT AS IN getAuthorisationURL!!
-        String redirectUri = "http://34.147.242.86:3000/callback";
+        String redirectUri = pageAddress+"/callback";
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
