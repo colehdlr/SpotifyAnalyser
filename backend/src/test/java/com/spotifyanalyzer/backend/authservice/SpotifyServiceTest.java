@@ -166,7 +166,7 @@ public class SpotifyServiceTest {
 
         SpotifyAuthException exception = assertThrows(
                 SpotifyAuthException.class,
-                () -> spotifyService.getUserProfile(refreshToken)
+                () -> spotifyService.getUserProfile(accessToken)
         );
 
         assertTrue(exception.getMessage().contains("failed to get user profile"));
