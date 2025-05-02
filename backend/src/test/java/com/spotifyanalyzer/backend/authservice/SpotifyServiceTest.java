@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -33,6 +34,9 @@ public class SpotifyServiceTest {
 
     private SpotifyService spotifyService;
 
+    @Value("${page.address}")
+    private String pageAddress;
+
     @BeforeEach
     void setUp() {
         spotifyService = new SpotifyService(spotifyConfig, restTemplate, objectMapper);
@@ -43,17 +47,15 @@ public class SpotifyServiceTest {
         lenient().when(spotifyConfig.getRedirectUri()).thenReturn("http://localhost:3000/callback");
     }
 
-    // TODO: FIX THIS SO IT WORKS WITH DEPLOYMENT
-//    @Test
-//    void testGetAuthorisationUrl() {
-//        String authUrl = spotifyService.getAuthorisationUrl();
-//        System.out.println("Generated Auth URL: " + authUrl);
-//
-//        assertTrue(authUrl.startsWith("https://accounts.spotify.com/authorize?response_type=code"));
-//        assertTrue(authUrl.contains("client_id=test-client-id"));
-//        assertTrue(authUrl.contains("redirect_uri=http://localhost:3000/callback"));
-//        assertTrue(authUrl.contains("redirect_uri=http://34.147.242.86:3000/callback"));
-//    }
+    @Test
+    void testGetAuthorisationUrl() {
+        String authUrl = spotifyService.getAuthorisationUrl();
+        System.out.println("Generated Auth URL: " + authUrl);
+
+        assertTrue(authUrl.startsWith("https://accounts.spotify.com/authorize?response_type=code"));
+        assertTrue(authUrl.contains("client_id=test-client-id"));
+        assertTrue(authUrl.contains("redirect_uri="+pageAddress+"/callback"));
+    }
 
     @Test
     void testExchangeCodeForToken() {

@@ -18,8 +18,8 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-    private String allowedOrigins = "http://34.147.242.86:3000";
+    @Value("${page.address}")
+    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
