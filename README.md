@@ -2,7 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Getting started
+## Getting started - Hosted Version
+Please visit http://34.147.242.86:3000/ to access SpotifyAnalyzer from your browser. Please note, if you are accessing with credentials other than the test account, reach out to ec24579@qmul.ac.uk so we can give you the correct authorization.
+
+## Getting started - Local Use
 
 ### Setting up the workspace
 Start by opening a terminal in your workspace. 
