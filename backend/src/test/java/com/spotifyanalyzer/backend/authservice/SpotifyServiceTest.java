@@ -85,7 +85,7 @@ public class SpotifyServiceTest {
                 any(HttpMethod.class),
                 any(HttpEntity.class),
                 eq(SpotifyAuthResponse.class)
-        )).thenThrow(new SpotifyAuthException);
+        )).thenThrow(new SpotifyAuthException("Test error message"));
 
         assertThrows(
                 SpotifyAuthException.class,
