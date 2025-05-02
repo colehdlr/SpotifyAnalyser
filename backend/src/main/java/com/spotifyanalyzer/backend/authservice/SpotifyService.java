@@ -107,50 +107,61 @@ public class SpotifyService {
      * refresh the expired access token using the refresh token (see <a href="https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens">...</a>)
      */
     public SpotifyAuthResponse refreshAccessToken(String refreshToken) {
-        HttpHeaders headers = createBasicAuthHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        try {
+            HttpHeaders headers = createBasicAuthHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "refresh_token");
-        body.add("refresh_token", refreshToken);
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("grant_type", "refresh_token");
+            body.add("refresh_token", refreshToken);
 
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
+            HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<SpotifyAuthResponse> response = restTemplate.exchange(
-                "https://accounts.spotify.com/api/token",
-                HttpMethod.POST,
-                entity,
-                SpotifyAuthResponse.class
-        );
+            ResponseEntity<SpotifyAuthResponse> response = restTemplate.exchange(
+                    "https://accounts.spotify.com/api/token",
+                    HttpMethod.POST,
+                    entity,
+                    SpotifyAuthResponse.class
+            );
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new SpotifyAuthException("failed to refresh access token");
+            }
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new SpotifyAuthException("failed to refresh access token");
+            return response.getBody();
         }
-
-        return response.getBody();
+        catch (Exception e) {
+            System.err.println("error during token refresh: " + e.getMessage());
+            throw new SpotifyAuthException("token refresh failed: " + e.getMessage(), e);
+        }
     }
 
     /**
      * gets the current user's Spotify profile
      */
     public Map<String, Object> getUserProfile(String accessToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
 
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+            HttpEntity<?> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<Map> response = restTemplate.exchange(
-                "https://api.spotify.com/v1/me",
-                HttpMethod.GET,
-                entity,
-                Map.class
-        );
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    "https://api.spotify.com/v1/me",
+                    HttpMethod.GET,
+                    entity,
+                    Map.class
+            );
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new SpotifyAuthException("failed to fetch user profile");
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new SpotifyAuthException("failed to fetch user profile");
+            }
+
+            return response.getBody();
         }
-
-        return response.getBody();
+        catch (Exception e) {
+            System.err.println("error during fetching user profile: " + e.getMessage());
+            throw new SpotifyAuthException("failed to fetch user profile: " + e.getMessage(), e);
+        }
     }
 
     /**

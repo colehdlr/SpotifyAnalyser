@@ -115,25 +115,24 @@ public class SpotifyServiceTest {
 
         assertEquals(expectedResponse.getAccessToken(), actualResponse.getAccessToken());
     }
-// TODO: FIX TEST SO IT WORKS WITH DEPLOYMENT
-//    @Test
-//    void testRefreshAccessToken_Error() {
-//        String refreshToken = "invalid-refresh-token";
-//
-//        when(restTemplate.exchange(
-//                anyString(),
-//                any(HttpMethod.class),
-//                any(HttpEntity.class),
-//                eq(SpotifyAuthResponse.class)
-//        )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
-//
-//        SpotifyAuthException exception = assertThrows(
-//                SpotifyAuthException.class,
-//                () -> spotifyService.refreshAccessToken(refreshToken)
-//        );
-//
-//        assertTrue(exception.getMessage().contains("failed to refresh access token"));
-//    }
+
+    @Test
+    void testRefreshAccessToken_Error() {
+        String refreshToken = "invalid-refresh-token";
+
+        when(restTemplate.exchange(
+                anyString(),
+                any(HttpMethod.class),
+                any(HttpEntity.class),
+                eq(SpotifyAuthResponse.class)
+        )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+
+        SpotifyAuthException exception = assertThrows(
+                SpotifyAuthException.class,
+                () -> spotifyService.refreshAccessToken(refreshToken)
+        );
+
+    }
 
     @Test
     void testGetUserProfile() {
@@ -156,24 +155,22 @@ public class SpotifyServiceTest {
         assertEquals(userData, actualUserData);
     }
 
-//    @Test
-//    void testGetUserProfile_Error() {
-//        String accessToken = "invalid-access-token";
-//
-//        when(restTemplate.exchange(
-//                anyString(),
-//                any(HttpMethod.class),
-//                any(HttpEntity.class),
-//                eq(Map.class)
-//        )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
-//
-//        SpotifyAuthException exception = assertThrows(
-//                SpotifyAuthException.class,
-//                () -> spotifyService.getUserProfile(accessToken)
-//        );
-//
-//        assertTrue(exception.getMessage().contains("failed to get user profile"));
-//    }
+    @Test
+    void testGetUserProfile_Error() {
+        String accessToken = "invalid-access-token";
+
+        when(restTemplate.exchange(
+                anyString(),
+                any(HttpMethod.class),
+                any(HttpEntity.class),
+                eq(Map.class)
+        )).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+
+        SpotifyAuthException exception = assertThrows(
+                SpotifyAuthException.class,
+                () -> spotifyService.getUserProfile(accessToken)
+        );
+    }
 
     @Test
     void testMakeSpotifyRequest() {
